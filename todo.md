@@ -34,8 +34,8 @@ _A comprehensive, step–by–step guide. Mark each `[ ]` as `[x]` when finished
 
 ### Smoke Test
 - [X] Add Spring Boot Actuator  
-- [ ] Write health-check test hitting `/actuator/health` (expects 200 & `"UP"`)  
-- [ ] Ensure CI pass (local `./gradlew test`)  
+- [X] Write health-check test hitting `/actuator/health` (expects 200 & `"UP"`)  
+- [X] Ensure CI pass (local `./gradlew test`)  
 
 ---
 
