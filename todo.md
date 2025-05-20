@@ -12,30 +12,28 @@ _A comprehensive, step–by–step guide. Mark each `[ ]` as `[x]` when finished
 ---
 
 ## 0. Preparation
-- [ ] Agree on Git workflow (Git Flow / trunk-based)  
-  ▶ [ ] Create empty Git repository  
-  ▶ [ ] Add `.gitignore` (Java, Gradle/Maven, IDE files)  
-- [ ] Configure Java toolchain (17 +) in IDE & build file  
-- [ ] Decide on build tool  
+- [x] Agree on Git workflow (Git Flow / trunk-based)  
+  ▶ [X] Create empty Git repository  
+  ▶ [X] Add `.gitignore` (Java, Gradle/Maven, IDE files)  
+- [X] Configure Java toolchain (17 +) in IDE & build file  
+- [X] Decide on build tool  
   ▶ [ ] Gradle  
-  ▶ [ ] or Maven  
-- [ ] Define versioning & release naming convention  
-- [ ] Enable conventional commits (commit-lint hook or template)  
+  ▶ [X] or Maven  
+- [X] Define versioning & release naming convention  
 
 ---
 
 ## 1. Project Skeleton (Milestone A)
-- [ ] Generate Spring Boot project skeleton  
-  ▶ [ ] `LibraryApplication` main class  
-  ▶ [ ] Build file with explicit versions  
-  ▶ [ ] Dependencies: Spring Web, Spring Data JDBC, H2, Test, Lombok (optional)  
-- [ ] Add JUnit 5 + AssertJ + Spring-Boot-Test  
-- [ ] Add Testcontainers (future-proof)  
-- [ ] Provide empty `application.yml`  
-- [ ] Commit initial state  
+- [X] Generate Spring Boot project skeleton  
+  ▶ [X] `LibraryApplication` main class  
+  ▶ [X] Build file with explicit versions  
+  ▶ [X] Dependencies: Spring Web, Spring Data JDBC, H2, Test, Lombok (optional)  
+- [X] Add JUnit 5 + AssertJ + Spring-Boot-Test  
+- [X] Provide empty `application.yml`  
+- [X] Commit initial state  
 
 ### Smoke Test
-- [ ] Add Spring Boot Actuator  
+- [X] Add Spring Boot Actuator  
 - [ ] Write health-check test hitting `/actuator/health` (expects 200 & `"UP"`)  
 - [ ] Ensure CI pass (local `./gradlew test`)  
 
