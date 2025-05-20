@@ -1,0 +1,2 @@
+# Setup file for ASDF - https://asdf-vm.com/manage/configuration.html
+java adoptopenjdk-24.0.1+9
