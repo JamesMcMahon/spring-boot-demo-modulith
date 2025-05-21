@@ -40,16 +40,16 @@ _A comprehensive, step–by–step guide. Mark each `[ ]` as `[x]` when finished
 ---
 
 ## 2. Catalog Domain (Milestone B)
-- [ ] Value Object `BookId`  
-  ▶ [ ] Static factory `of(UUID)`  
-  ▶ [ ] `random()` helper  
-  ▶ [ ] Null-guard & equality tests  
-- [ ] Aggregate `Book`  
-  ▶ [ ] Fields: id, title, author, copiesAvailable  
-  ▶ [ ] `addCopies(int)` (+ve only)  
-  ▶ [ ] `borrow()` (guard zero stock)  
-  ▶ [ ] `returnCopy()`  
-  ▶ [ ] Unit tests (happy & error paths)  
+- [X] Value Object `BookId`  
+  ▶ [X] Static factory `of(UUID)`  
+  ▶ [X] `random()` helper  
+  ▶ [X] Null-guard & equality tests  
+- [X] Aggregate `Book`  
+  ▶ [X] Fields: id, title, author, copiesAvailable  
+  ▶ [X] `addCopies(int)` (+ve only)  
+  ▶ [X] `borrow()` (guard zero stock)  
+  ▶ [X] `returnCopy()`  
+  ▶ [X] Unit tests (happy & error paths)  
 - [ ] Spring Data JDBC mapping  
   ▶ [ ] `BookRepository`  
   ▶ [ ] Table DDL in `schema.sql`  
