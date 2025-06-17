@@ -3,7 +3,6 @@ package sh.jfm.springbootdemos.modulith.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import sh.jfm.springbootdemos.modulith.data.BookRepository;
 import sh.jfm.springbootdemos.modulith.model.Book;
 import sh.jfm.springbootdemos.modulith.services.BookAlreadyExistsException;
@@ -19,25 +18,39 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CatalogTests {
 
     @Autowired
-    JdbcAggregateTemplate template;
-    @Autowired
     BookRepository repo;
 
     @Test
     void addInsertsNewBook() {
         var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
 
-        new Catalog(repo, template).add(book);
+        new Catalog(repo).add(book);
 
         // verify no extra rows were written
         assertThat(repo.count()).isOne();
-        assertThat(repo.findById(book.isbn()))
-                .contains(book);
+        assertThat(repo.findByIsbn(book.isbn()))
+                .isPresent()
+                .get()  // unwraps the optional
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(book);
+    }
+
+    @Test
+    void addFailsIfThereIsAnId() {
+        assertThatThrownBy(() -> new Catalog(repo).add(
+                new Book(
+                        5L,
+                        "9780132350884",
+                        "Clean Code",
+                        "Robert C. Martin"
+                )))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void updateChangesExistingBook() {
-        var catalog = new Catalog(repo, template);
+        var catalog = new Catalog(repo);
         var original = new Book("9780132350884", "Clean Code", "Robert C. Martin");
         catalog.add(original);
 
@@ -46,13 +59,17 @@ class CatalogTests {
 
         // verify no extra rows were written
         assertThat(repo.count()).isOne();
-        assertThat(repo.findById(revised.isbn()))
-                .contains(revised);
+        assertThat(repo.findByIsbn(revised.isbn()))
+                .isPresent()
+                .get()
+                .usingRecursiveComparison()
+                .ignoringFields("id")
+                .isEqualTo(revised);
     }
 
     @Test
     void addThrowsWhenIsbnAlreadyExists() {
-        var catalog = new Catalog(repo, template);
+        var catalog = new Catalog(repo);
         var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
         catalog.add(book);
 
@@ -65,7 +82,7 @@ class CatalogTests {
 
     @Test
     void updateThrowsWhenIsbnUnknown() {
-        var catalog = new Catalog(repo, template);
+        var catalog = new Catalog(repo);
         var unknown = new Book("9780132350884", "Clean Code", "Robert C. Martin");
 
         assertThatThrownBy(() -> catalog.update(unknown))

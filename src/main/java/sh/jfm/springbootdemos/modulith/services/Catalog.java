@@ -1,6 +1,5 @@
 package sh.jfm.springbootdemos.modulith.services;
 
-import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sh.jfm.springbootdemos.modulith.data.BookRepository;
@@ -19,29 +18,29 @@ import java.util.Optional;
 public class Catalog {
 
     private final BookRepository repo;
-    private final JdbcAggregateTemplate template;
 
-    public Catalog(BookRepository repo, JdbcAggregateTemplate template) {
+    public Catalog(BookRepository repo) {
         this.repo = repo;
-        this.template = template;
     }
 
     public Book add(Book book) {
-        if (repo.existsById(book.isbn())) {
+        if (book.id() != null) {
+            throw new IllegalArgumentException("Book ID must be null when creating a new book");
+        }
+        if (repo.existsByIsbn(book.isbn())) {
             throw new BookAlreadyExistsException(book.isbn());
         }
-        return template.insert(book);
+        return repo.save(book);
     }
 
     public void update(Book book) {
-        if (!repo.existsById(book.isbn())) {
-            throw new BookNotFoundException(book.isbn());
-        }
-        repo.save(book);
+        var existing = repo.findByIsbn(book.isbn())
+                .orElseThrow(() -> new BookNotFoundException(book.isbn()));
+        repo.save(new Book(existing.id(), book.isbn(), book.title(), book.author()));
     }
 
     @Transactional(readOnly = true)
     public Optional<Book> byIsbn(String isbn) {
-        return repo.findById(isbn);
+        return repo.findByIsbn(isbn);
     }
 }
