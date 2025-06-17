@@ -1,0 +1,53 @@
+package sh.jfm.springbootdemos.modulith;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+/// Uses standalone MockMvc to assert that [RestExceptionAdvice]
+/// maps domain errors to correct HTTP status codes without starting
+/// the full Spring context.
+class RestExceptionAdviceTests {
+
+    private MockMvc mvc;
+
+    @BeforeEach
+    void setUp() {
+        mvc = MockMvcBuilders
+                .standaloneSetup(new FailingController())      // minimal controller
+                .setControllerAdvice(new RestExceptionAdvice()) // advice under test
+                .build();
+    }
+
+    @Test
+    void bookAlreadyExistsMapsTo409() throws Exception {
+        mvc.perform(get("/exists"))
+                .andExpect(status().isConflict());                  // 409
+    }
+
+    @Test
+    void bookNotFoundMapsTo404() throws Exception {
+        mvc.perform(get("/missing"))
+                .andExpect(status().isNotFound());                  // 404
+    }
+
+    @RestController
+    static class FailingController {
+
+        @GetMapping("/exists")
+        void throwExists() {
+            throw new BookAlreadyExistsException("123");
+        }
+
+        @GetMapping("/missing")
+        void throwMissing() {
+            throw new BookNotFoundException("123");
+        }
+    }
+}
