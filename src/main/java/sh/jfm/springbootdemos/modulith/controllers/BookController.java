@@ -1,7 +1,9 @@
-package sh.jfm.springbootdemos.modulith;
+package sh.jfm.springbootdemos.modulith.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import sh.jfm.springbootdemos.modulith.model.Book;
+import sh.jfm.springbootdemos.modulith.services.Catalog;
 
 import java.net.URI;
 

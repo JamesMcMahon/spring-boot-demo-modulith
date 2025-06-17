@@ -1,4 +1,4 @@
-package sh.jfm.springbootdemos.modulith;
+package sh.jfm.springbootdemos.modulith.model;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;

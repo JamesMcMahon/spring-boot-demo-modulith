@@ -1,4 +1,4 @@
-package sh.jfm.springbootdemos.modulith;
+package sh.jfm.springbootdemos.modulith.controllers;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -6,6 +6,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import sh.jfm.springbootdemos.modulith.services.BookAlreadyExistsException;
+import sh.jfm.springbootdemos.modulith.services.BookNotFoundException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

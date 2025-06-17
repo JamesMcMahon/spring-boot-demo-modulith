@@ -1,8 +1,10 @@
-package sh.jfm.springbootdemos.modulith;
+package sh.jfm.springbootdemos.modulith.services;
 
 import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sh.jfm.springbootdemos.modulith.data.BookRepository;
+import sh.jfm.springbootdemos.modulith.model.Book;
 
 import java.util.Optional;
 

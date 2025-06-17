@@ -1,8 +1,10 @@
-package sh.jfm.springbootdemos.modulith;
+package sh.jfm.springbootdemos.modulith.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import sh.jfm.springbootdemos.modulith.services.BookAlreadyExistsException;
+import sh.jfm.springbootdemos.modulith.services.BookNotFoundException;
 
 /// Centralizes translation of domain exceptions to HTTP status codes,
 /// avoiding scattered try/catch in controllers.
