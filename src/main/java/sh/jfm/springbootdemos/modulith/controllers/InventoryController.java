@@ -24,12 +24,27 @@ class InventoryController {
         return Map.of("available", inventory.availability(isbn));
     }
 
+    private record NewCopyRequest(String isbn, String location) {
+    }
+
     @PostMapping("/copies")
-    ResponseEntity<Void> add(@RequestBody Copy copyToCreate) {
-        var inserted = inventory.add(copyToCreate);
+    ResponseEntity<Void> add(@RequestBody NewCopyRequest body) {
+        var inserted = inventory.add(new Copy(body.isbn(), body.location()));
         return ResponseEntity
                 .created(URI.create("/inventory/copies/" + inserted.id()))
                 .build();
+    }
+
+    private record AvailabilityUpdateRequest(boolean available) {
+    }
+
+    @PatchMapping("/copies/{copyId}")
+    ResponseEntity<Void> setAvailability(
+            @PathVariable long copyId,
+            @RequestBody AvailabilityUpdateRequest request
+    ) {
+        inventory.setAvailability(copyId, request.available());
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/copies/{copyId}")

@@ -11,5 +11,6 @@ CREATE TABLE "copies"
     id       BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     isbn     VARCHAR(20)  NOT NULL,
     location VARCHAR(255) NOT NULL,
+    available BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_copies_books FOREIGN KEY (isbn) REFERENCES "books" (isbn)
 );

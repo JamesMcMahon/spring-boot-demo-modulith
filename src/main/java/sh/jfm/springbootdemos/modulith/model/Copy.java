@@ -8,9 +8,10 @@ import org.springframework.data.relational.core.mapping.Table;
 public record Copy(
         @Id Long id,
         String isbn,
-        String location
+        String location,
+        boolean available
 ) {
     public Copy(String isbn, String location) {
-        this(null, isbn, location);
+        this(null, isbn, location, true);
     }
 }

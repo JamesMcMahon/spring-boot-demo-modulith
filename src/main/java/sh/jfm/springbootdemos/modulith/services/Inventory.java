@@ -42,6 +42,17 @@ public class Inventory {
 
     @Transactional(readOnly = true)
     public long availability(String isbn) {
-        return copies.countByIsbn(isbn);
+        return copies.countByIsbnAndAvailableTrue(isbn);
+    }
+
+    public void setAvailability(long id, boolean available) {
+        var existing = copies.findById(id)
+                .orElseThrow(() -> new CopyNotFoundException(id));
+        copies.save(new Copy(
+                id,
+                existing.isbn(),
+                existing.location(),
+                available
+        ));
     }
 }

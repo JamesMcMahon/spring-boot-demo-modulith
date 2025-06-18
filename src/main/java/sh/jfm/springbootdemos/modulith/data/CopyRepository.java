@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import sh.jfm.springbootdemos.modulith.model.Copy;
 
 public interface CopyRepository extends CrudRepository<Copy, Long> {
-    long countByIsbn(String isbn);
+    long countByIsbnAndAvailableTrue(String isbn);
 }

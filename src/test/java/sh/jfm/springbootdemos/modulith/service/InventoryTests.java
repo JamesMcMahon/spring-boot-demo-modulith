@@ -53,7 +53,7 @@ class InventoryTests {
 
         assertThatThrownBy(
                 () -> new Inventory(copyRepo, bookRepo).
-                        add(new Copy(1L, "9781416928171", "Main Library"))
+                        add(new Copy(1L, "9781416928171", "Main Library", true))
         )
                 .isInstanceOf(IllegalArgumentException.class);
 
@@ -79,5 +79,27 @@ class InventoryTests {
                 .isInstanceOf(CopyNotFoundException.class);
 
         assertThat(copyRepo.count()).isZero();
+    }
+
+    @Test
+    void setAvailabilityTogglesFlagAndAffectsCount() {
+        // arrange – persist a referenced book and one available copy
+        bookRepo.save(new Book("9780000000001", "Some Book", "Some Author"));
+        var inventory = new Inventory(copyRepo, bookRepo);
+        var copy = inventory.add(new Copy("9780000000001", "Main Library"));
+
+        assertThat(inventory.availability("9780000000001")).isEqualTo(1);
+
+        // act – mark copy unavailable
+        inventory.setAvailability(copy.id(), false);
+
+        // assert – count dropped
+        assertThat(inventory.availability("9780000000001")).isEqualTo(0);
+
+        // act – mark available again
+        inventory.setAvailability(copy.id(), true);
+
+        // assert – count restored
+        assertThat(inventory.availability("9780000000001")).isEqualTo(1);
     }
 }
