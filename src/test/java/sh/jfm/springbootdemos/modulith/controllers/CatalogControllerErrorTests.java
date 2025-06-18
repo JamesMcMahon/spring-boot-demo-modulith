@@ -16,8 +16,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /// Web-layer slice test (`@WebMvcTest`) – focuses on error handling.
 /// [Catalog] is mocked; its logic is covered elsewhere.
-@WebMvcTest(BookController.class)
-class BookControllerErrorTests {
+@WebMvcTest(CatalogController.class)
+class CatalogControllerErrorTests {
 
     @Autowired
     MockMvc mvc;

@@ -11,11 +11,11 @@ import java.net.URI;
 /// The only responsibility is HTTP ↔︎ domain mapping.
 @RestController
 @RequestMapping("/catalog/books")
-class BookController {
+class CatalogController {
 
     private final Catalog catalog;
 
-    BookController(Catalog catalog) {
+    CatalogController(Catalog catalog) {
         this.catalog = catalog;
     }
 
