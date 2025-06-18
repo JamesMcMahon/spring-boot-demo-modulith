@@ -1,6 +1,5 @@
 package sh.jfm.springbootdemos.modulith.services;
 
-import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sh.jfm.springbootdemos.modulith.data.BookRepository;
@@ -17,21 +16,21 @@ public class Inventory {
 
     private final CopyRepository copies;
     private final BookRepository books;
-    private final JdbcAggregateTemplate template;
 
     public Inventory(CopyRepository copies,
-                     BookRepository books,
-                     JdbcAggregateTemplate template) {
+                     BookRepository books) {
         this.copies = copies;
         this.books = books;
-        this.template = template;
     }
 
     public Copy add(Copy copy) {
+        if (copy.id() != null) {
+            throw new IllegalArgumentException("Copy ID must be null when creating a new copy");
+        }
         if (!books.existsByIsbn(copy.isbn())) {
             throw new BookNotFoundException(copy.isbn());
         }
-        return template.insert(copy);
+        return copies.save(copy);
     }
 
     public void remove(long id) {

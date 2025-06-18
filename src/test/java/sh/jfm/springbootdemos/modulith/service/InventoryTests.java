@@ -3,7 +3,6 @@ package sh.jfm.springbootdemos.modulith.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
-import org.springframework.data.jdbc.core.JdbcAggregateTemplate;
 import sh.jfm.springbootdemos.modulith.data.BookRepository;
 import sh.jfm.springbootdemos.modulith.data.CopyRepository;
 import sh.jfm.springbootdemos.modulith.model.Book;
@@ -20,8 +19,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class InventoryTests {
 
     @Autowired
-    JdbcAggregateTemplate template;
-    @Autowired
     BookRepository bookRepo;
     @Autowired
     CopyRepository copyRepo;
@@ -30,7 +27,7 @@ class InventoryTests {
     void addInsertsCopy() {
         bookRepo.save(new Book("9780671698096", "Howliday Inn", "Deborah and James Howe"));
 
-        var inserted = new Inventory(copyRepo, bookRepo, template)
+        var inserted = new Inventory(copyRepo, bookRepo)
                 .add(new Copy("9780671698096", "Main Library"));
 
         assertThat(inserted.id()).isNotNull();
@@ -42,7 +39,7 @@ class InventoryTests {
     @Test
     void removeDeletesCopy() {
         bookRepo.save(new Book("9780671698097", "The Celery Stalks at Midnight", "Deborah and James Howe"));
-        var inventory = new Inventory(copyRepo, bookRepo, template);
+        var inventory = new Inventory(copyRepo, bookRepo);
         var inserted = inventory.add(new Copy("9780671698097", "Main Library"));
 
         inventory.remove(inserted.id());
@@ -51,9 +48,22 @@ class InventoryTests {
     }
 
     @Test
+    void addThrowsWhenIdIsPresent() {
+        bookRepo.save(new Book("9781416928171", "Bunnicula Meets Edgar Allan Crow", "James Howe"));
+
+        assertThatThrownBy(
+                () -> new Inventory(copyRepo, bookRepo).
+                        add(new Copy(1L, "9781416928171", "Main Library"))
+        )
+                .isInstanceOf(IllegalArgumentException.class);
+
+        assertThat(copyRepo.count()).isZero();
+    }
+
+    @Test
     void addThrowsWhenIsbnUnknown() {
         assertThatThrownBy(
-                () -> new Inventory(copyRepo, bookRepo, template).
+                () -> new Inventory(copyRepo, bookRepo).
                         add(new Copy("unknown-isbn", "Main Library"))
         )
                 .isInstanceOf(BookNotFoundException.class);
@@ -65,7 +75,7 @@ class InventoryTests {
     void removeThrowsWhenIdMissing() {
         bookRepo.save(new Book("9780689315484", "Nighty-Nightmare", "Deborah and James Howe"));
 
-        assertThatThrownBy(() -> new Inventory(copyRepo, bookRepo, template).remove(12345L))
+        assertThatThrownBy(() -> new Inventory(copyRepo, bookRepo).remove(12345L))
                 .isInstanceOf(CopyNotFoundException.class);
 
         assertThat(copyRepo.count()).isZero();
