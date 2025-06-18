@@ -37,18 +37,6 @@ class CatalogTests {
     }
 
     @Test
-    void addFailsIfThereIsAnId() {
-        assertThatThrownBy(() -> new Catalog(repo).add(
-                new Book(
-                        5L,
-                        "9780132350884",
-                        "Clean Code",
-                        "Robert C. Martin"
-                )))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void updateChangesExistingBook() {
         var catalog = new Catalog(repo);
         var original = new Book("9780132350884", "Clean Code", "Robert C. Martin");
@@ -65,6 +53,18 @@ class CatalogTests {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(revised);
+    }
+
+    @Test
+    void addFailsIfThereIsAnId() {
+        assertThatThrownBy(() -> new Catalog(repo).add(
+                new Book(
+                        5L,
+                        "9780132350884",
+                        "Clean Code",
+                        "Robert C. Martin"
+                )))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
