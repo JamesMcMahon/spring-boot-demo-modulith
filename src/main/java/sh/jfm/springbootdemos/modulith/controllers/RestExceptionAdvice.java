@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import sh.jfm.springbootdemos.modulith.services.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.services.BookNotFoundException;
+import sh.jfm.springbootdemos.modulith.services.CopyNotFoundException;
 
 /// Centralizes translation of domain exceptions to HTTP status codes,
 /// avoiding scattered try/catch in controllers.
@@ -18,6 +19,11 @@ public class RestExceptionAdvice {
 
     @ExceptionHandler(BookNotFoundException.class)
     ResponseEntity<Void> handleBookMissing() {
+        return ResponseEntity.status(404).build();
+    }
+
+    @ExceptionHandler(CopyNotFoundException.class)
+    ResponseEntity<Void> handleCopyMissing() {
         return ResponseEntity.status(404).build();
     }
 }

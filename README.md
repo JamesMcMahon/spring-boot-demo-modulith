@@ -39,3 +39,33 @@ curl -i -X PATCH http://localhost:8080/catalog/books/9780132350884 \
 
 The commands assume the app is running locally on port 8080; adjust as needed.
 
+## 📦 Inventory API – sample curl commands
+
+### 1. Add a copy of a book
+
+```bash
+curl -i -X POST http://localhost:8080/inventory/copies \
+     -H 'Content-Type: application/json' \
+     -d '{"isbn":"9781416928171","location":"Main Library"}'
+```
+
+• HTTP 201 Created, *Location* header contains `/inventory/copies/{copyId}` with the generated numeric id.
+
+### 2. Check availability
+
+```bash
+curl -i http://localhost:8080/inventory/books/9781416928171/availability
+```
+
+• HTTP 200 with a payload like `{"available":1}`.
+
+### 3. Remove a copy
+
+```bash
+curl -i -X DELETE http://localhost:8080/inventory/copies/{copyId}
+```
+
+• HTTP 204 No Content on success.
+
+> Replace `{copyId}` with the id returned in step 1.
+
