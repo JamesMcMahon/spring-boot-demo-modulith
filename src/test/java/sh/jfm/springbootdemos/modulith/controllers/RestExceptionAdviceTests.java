@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import sh.jfm.springbootdemos.modulith.services.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.services.BookNotFoundException;
+import sh.jfm.springbootdemos.modulith.services.CopyNotFoundException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,6 +40,12 @@ class RestExceptionAdviceTests {
                 .andExpect(status().isNotFound());                  // 404
     }
 
+    @Test
+    void copyNotFoundMapsTo404() throws Exception {
+        mvc.perform(get("/copy-missing"))
+                .andExpect(status().isNotFound());
+    }
+
     @RestController
     static class FailingController {
 
@@ -50,6 +57,11 @@ class RestExceptionAdviceTests {
         @GetMapping("/missing")
         void throwMissing() {
             throw new BookNotFoundException("123");
+        }
+
+        @GetMapping("/copy-missing")
+        void throwCopyMissing() {
+            throw new CopyNotFoundException(42L);
         }
     }
 }
