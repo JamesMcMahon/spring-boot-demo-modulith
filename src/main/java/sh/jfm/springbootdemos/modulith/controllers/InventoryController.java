@@ -28,11 +28,11 @@ class InventoryController {
     }
 
     @PostMapping("/copies")
-    ResponseEntity<Void> add(@RequestBody NewCopyRequest body) {
+    ResponseEntity<Copy> add(@RequestBody NewCopyRequest body) {
         var inserted = inventory.add(new Copy(body.isbn(), body.location()));
         return ResponseEntity
                 .created(URI.create("/inventory/copies/" + inserted.id()))
-                .build();
+                .body(inserted);
     }
 
     private record AvailabilityUpdateRequest(boolean available) {

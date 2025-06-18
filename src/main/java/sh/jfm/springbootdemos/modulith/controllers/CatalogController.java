@@ -20,9 +20,11 @@ class CatalogController {
     }
 
     @PostMapping
-    ResponseEntity<Void> create(@RequestBody Book bookToCreate) {
+    ResponseEntity<Book> create(@RequestBody Book bookToCreate) {
         var inserted = catalog.add(bookToCreate);
-        return ResponseEntity.created(URI.create("/catalog/books/" + inserted.isbn())).build();
+        return ResponseEntity
+                .created(URI.create("/catalog/books/" + inserted.isbn()))
+                .body(inserted);
     }
 
     @GetMapping("/{isbn}")

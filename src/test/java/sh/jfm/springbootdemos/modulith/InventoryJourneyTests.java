@@ -55,8 +55,9 @@ class InventoryJourneyTests {
                         .then()
                         .statusCode(201)
                         .extract()
-                        .header("Location")
-                        .replaceAll(".*/", ""); // get id from Location header
+                        .body()
+                        .jsonPath()
+                        .getLong("id"); // get id from response body
 
         assertThat(copyRepo.count()).isEqualTo(1);
 
@@ -96,8 +97,8 @@ class InventoryJourneyTests {
         // ensure book exists
         bookRepo.save(new Book(isbn, "Return to Howliday Inn", "Deborah and James Howe"));
 
-        // create copy – capture ID from the Location header
-        String copyId =
+        // create copy – capture ID from the response body
+        var copyId =
                 given()
                         .contentType(ContentType.JSON)
                         .body("""
@@ -108,8 +109,9 @@ class InventoryJourneyTests {
                         .then()
                         .statusCode(201)
                         .extract()
-                        .header("Location")
-                        .replaceAll(".*/", "");
+                        .body()
+                        .jsonPath()
+                        .getLong("id");
 
         // availability is 1
         given()
