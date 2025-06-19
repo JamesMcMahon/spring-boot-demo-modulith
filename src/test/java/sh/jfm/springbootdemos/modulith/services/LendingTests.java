@@ -1,4 +1,4 @@
-package sh.jfm.springbootdemos.modulith.service;
+package sh.jfm.springbootdemos.modulith.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,10 +12,6 @@ import sh.jfm.springbootdemos.modulith.model.Book;
 import sh.jfm.springbootdemos.modulith.model.Copy;
 import sh.jfm.springbootdemos.modulith.model.Loan;
 import sh.jfm.springbootdemos.modulith.model.Patron;
-import sh.jfm.springbootdemos.modulith.services.Inventory;
-import sh.jfm.springbootdemos.modulith.services.Lending;
-import sh.jfm.springbootdemos.modulith.services.NoAvailableCopiesException;
-import sh.jfm.springbootdemos.modulith.services.PatronNotFoundException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
