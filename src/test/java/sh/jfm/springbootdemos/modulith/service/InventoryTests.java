@@ -1,5 +1,6 @@
 package sh.jfm.springbootdemos.modulith.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -10,6 +11,7 @@ import sh.jfm.springbootdemos.modulith.model.Copy;
 import sh.jfm.springbootdemos.modulith.services.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.services.CopyNotFoundException;
 import sh.jfm.springbootdemos.modulith.services.Inventory;
+import sh.jfm.springbootdemos.modulith.services.NoAvailableCopiesException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -19,16 +21,21 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class InventoryTests {
 
     @Autowired
-    BookRepository bookRepo;
+    private BookRepository bookRepo;
     @Autowired
-    CopyRepository copyRepo;
+    private CopyRepository copyRepo;
+    private Inventory inventory;
+
+    @BeforeEach
+    void setup() {
+        inventory = new Inventory(copyRepo, bookRepo);
+    }
 
     @Test
     void addInsertsCopy() {
         bookRepo.save(new Book("9780671698096", "Howliday Inn", "Deborah and James Howe"));
 
-        var inserted = new Inventory(copyRepo, bookRepo)
-                .add(new Copy("9780671698096", "Main Library"));
+        var inserted = inventory.add(new Copy("9780671698096", "Main Library"));
 
         assertThat(inserted.id()).isNotNull();
         assertThat(copyRepo.count()).isOne();
@@ -39,7 +46,6 @@ class InventoryTests {
     @Test
     void removeDeletesCopy() {
         bookRepo.save(new Book("9780671698097", "The Celery Stalks at Midnight", "Deborah and James Howe"));
-        var inventory = new Inventory(copyRepo, bookRepo);
         var inserted = inventory.add(new Copy("9780671698097", "Main Library"));
 
         inventory.remove(inserted.id());
@@ -63,7 +69,7 @@ class InventoryTests {
     @Test
     void addThrowsWhenIsbnUnknown() {
         assertThatThrownBy(
-                () -> new Inventory(copyRepo, bookRepo).
+                () -> inventory.
                         add(new Copy("unknown-isbn", "Main Library"))
         )
                 .isInstanceOf(BookNotFoundException.class);
@@ -75,7 +81,7 @@ class InventoryTests {
     void removeThrowsWhenIdMissing() {
         bookRepo.save(new Book("9780689315484", "Nighty-Nightmare", "Deborah and James Howe"));
 
-        assertThatThrownBy(() -> new Inventory(copyRepo, bookRepo).remove(12345L))
+        assertThatThrownBy(() -> inventory.remove(12345L))
                 .isInstanceOf(CopyNotFoundException.class);
 
         assertThat(copyRepo.count()).isZero();
@@ -85,7 +91,6 @@ class InventoryTests {
     void setAvailabilityTogglesFlagAndAffectsCount() {
         // arrange – persist a referenced book and one available copy
         bookRepo.save(new Book("9780000000001", "Some Book", "Some Author"));
-        var inventory = new Inventory(copyRepo, bookRepo);
         var copy = inventory.add(new Copy("9780000000001", "Main Library"));
 
         assertThat(inventory.availability("9780000000001")).isEqualTo(1);
@@ -101,5 +106,54 @@ class InventoryTests {
 
         // assert – count restored
         assertThat(inventory.availability("9780000000001")).isEqualTo(1);
+    }
+
+    @Test
+    void lendAvailableCopyMarksCopyUnavailableAndReturnsIt() {
+        // arrange
+        var isbn = "9780000009999";
+        bookRepo.save(new Book(isbn, "Borrowable Book", "Some Author"));
+        var copy = inventory.add(new Copy(isbn, "Main Library"));
+
+        assertThat(inventory.availability(isbn)).isEqualTo(1);
+
+        // act
+        var lent = inventory.lendAvailableCopy(isbn);
+
+        // assert – same copy returned, now unavailable and no copies free
+        assertThat(lent.id()).isEqualTo(copy.id());
+        assertThat(copyRepo.findById(copy.id()))
+                .map(Copy::available)
+                .contains(false);
+        assertThat(inventory.availability(isbn)).isZero();
+    }
+
+    @Test
+    void lendAvailableCopyThrowsWhenNoAvailableCopies() {
+        var isbn = "9780000008888";
+        bookRepo.save(new Book(isbn, "Unborrowable Book", "Some Author"));
+        var inventory = new Inventory(copyRepo, bookRepo);
+
+        assertThatThrownBy(() -> inventory.lendAvailableCopy(isbn))
+                .isInstanceOf(NoAvailableCopiesException.class);
+    }
+
+    @Test
+    void returnCopyMarksCopyAvailableAndIncrementsCount() {
+        // arrange – persist book and one copy, then mark it unavailable
+        var isbn = "9780000007777";
+        bookRepo.save(new Book(isbn, "Returned-Book", "Some Author"));
+        var copy = inventory.add(new Copy(isbn, "Main Library"));
+        inventory.setAvailability(copy.id(), false);              // simulate loan
+        assertThat(inventory.availability(isbn)).isZero();        // none available
+
+        // act – return the copy
+        inventory.returnCopy(copy.id());
+
+        // assert – copy is now available and counted
+        assertThat(copyRepo.findById(copy.id()))
+                .map(Copy::available)
+                .contains(true);
+        assertThat(inventory.availability(isbn)).isEqualTo(1);
     }
 }

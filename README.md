@@ -69,3 +69,33 @@ curl -i -X DELETE http://localhost:8080/inventory/copies/{copyId}
 
 > Replace `{copyId}` with the id returned in step 1.
 
+## 🔄 Lending API – sample curl commands
+
+### 1. Borrow a book
+
+```bash
+curl -i -X POST http://localhost:8080/lending/loans \
+     -H 'Content-Type: application/json' \
+     -d '{"patronId":1,"isbn":"9781416928171"}'
+```
+
+• HTTP 201 Created, *Location* header set to `/lending/loans/{loanId}`.
+
+### 2. Return a book
+
+```bash
+curl -i -X POST http://localhost:8080/lending/returns \
+     -H 'Content-Type: application/json' \
+     -d '{"patronId":1,"isbn":"9781416928171"}'
+```
+
+• HTTP 204 No Content on success.
+
+### 3. List active loans for a patron
+
+```bash
+curl -i http://localhost:8080/lending/patrons/1/loans
+```
+
+• HTTP 200 with a JSON array of the patron’s open loans.
+

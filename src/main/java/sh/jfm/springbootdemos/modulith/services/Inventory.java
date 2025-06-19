@@ -55,4 +55,15 @@ public class Inventory {
                 available
         ));
     }
+
+    public void returnCopy(long copyId) {
+        setAvailability(copyId, true);
+    }
+
+    public Copy lendAvailableCopy(String isbn) {
+        var copy = copies.findFirstByIsbnAndAvailableTrue(isbn)
+                .orElseThrow(() -> new NoAvailableCopiesException(isbn));
+        setAvailability(copy.id(), false);
+        return copy;
+    }
 }
