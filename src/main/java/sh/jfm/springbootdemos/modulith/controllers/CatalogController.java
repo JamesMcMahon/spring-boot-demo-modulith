@@ -36,7 +36,7 @@ class CatalogController {
 
     @PatchMapping("/{isbn}")
     ResponseEntity<Void> update(@PathVariable String isbn, @RequestBody Book book) {
-        if (!isbn.equals(book.isbn())) {                 // payload / path mismatch
+        if (!isbn.equals(book.isbn())) {
             return ResponseEntity.badRequest().build();
         }
         catalog.update(book);

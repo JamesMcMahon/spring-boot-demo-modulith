@@ -23,11 +23,10 @@ class CatalogTests {
 
         new Catalog(repo).add(book);
 
-        // verify no extra rows were written
         assertThat(repo.count()).isOne();
         assertThat(repo.findByIsbn(book.isbn()))
                 .isPresent()
-                .get()  // unwraps the optional
+                .get()
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(book);
@@ -42,7 +41,6 @@ class CatalogTests {
         var revised = new Book("9780132350884", "Cleaner Code", "Bob Martin");
         catalog.update(revised);
 
-        // verify no extra rows were written
         assertThat(repo.count()).isOne();
         assertThat(repo.findByIsbn(revised.isbn()))
                 .isPresent()
@@ -72,7 +70,6 @@ class CatalogTests {
 
         assertThatThrownBy(() -> catalog.add(book))
                 .isInstanceOf(BookAlreadyExistsException.class);
-
         // verify no extra rows were written
         assertThat(repo.count()).isOne();
     }
@@ -84,8 +81,7 @@ class CatalogTests {
 
         assertThatThrownBy(() -> catalog.update(unknown))
                 .isInstanceOf(BookNotFoundException.class);
-
         // verify no extra rows were written
-        assertThat(repo.count()).isZero();      // nothing was written
+        assertThat(repo.count()).isZero();
     }
 }

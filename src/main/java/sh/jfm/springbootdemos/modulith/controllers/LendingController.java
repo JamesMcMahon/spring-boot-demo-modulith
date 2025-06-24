@@ -9,6 +9,7 @@ import sh.jfm.springbootdemos.modulith.services.Lending;
 import java.util.List;
 import java.util.Map;
 
+/// REST adapter for [Lending]
 @RestController
 @RequestMapping("/lending")
 class LendingController {
