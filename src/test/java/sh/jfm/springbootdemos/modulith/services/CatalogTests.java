@@ -27,7 +27,7 @@ class CatalogTests {
 
     @Test
     void addInsertsNewBook() {
-        var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
+        var book = new Book("9780439706230", "Out From Boneville", "Jeff Smith");
 
         catalog.add(book);
 
@@ -42,9 +42,9 @@ class CatalogTests {
 
     @Test
     void updateChangesExistingBook() {
-        catalog.add(new Book("9780132350884", "Clean Code", "Robert C. Martin"));
+        catalog.add(new Book("0963660985", "The Great Cow Race", "Jeff Smith"));
 
-        var revised = new Book("9780132350884", "Cleaner Code", "Bob Martin");
+        var revised = new Book("0963660985", "The Greater Cow Race", "Jeff Smith");
         catalog.update(revised);
 
         assertThat(repo.count()).isOne();
@@ -61,16 +61,16 @@ class CatalogTests {
         assertThatThrownBy(() -> catalog.add(
                 new Book(
                         5L,
-                        "9780132350884",
-                        "Clean Code",
-                        "Robert C. Martin"
+                        "9780439706261",
+                        "Rock Jaw",
+                        "Jeff Smith"
                 )))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void addThrowsWhenIsbnAlreadyExists() {
-        var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
+        var book = new Book("9780439706254", "The Dragonslayer", "Jeff Smith");
         catalog.add(book);
 
         assertThatThrownBy(() -> catalog.add(book))
@@ -79,13 +79,14 @@ class CatalogTests {
         assertThat(repo.count()).isOne();
     }
 
+
     @Test
     void updateThrowsWhenIsbnUnknown() {
         assertThatThrownBy(() -> catalog.update(
                 new Book(
-                        "9780132350884",
-                        "Clean Code",
-                        "Robert C. Martin"
+                        "0963660977",
+                        "Eyes of the Storm",
+                        "Jeff Smith"
                 )))
                 .isInstanceOf(BookNotFoundException.class);
         // verify no extra rows were written
