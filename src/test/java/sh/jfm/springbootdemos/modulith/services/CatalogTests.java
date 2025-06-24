@@ -1,5 +1,6 @@
 package sh.jfm.springbootdemos.modulith.services;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -17,11 +18,18 @@ class CatalogTests {
     @Autowired
     BookRepository repo;
 
+    private Catalog catalog;
+
+    @BeforeEach
+    void setUp() {
+        catalog = new Catalog(repo);
+    }
+
     @Test
     void addInsertsNewBook() {
         var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
 
-        new Catalog(repo).add(book);
+        catalog.add(book);
 
         assertThat(repo.count()).isOne();
         assertThat(repo.findByIsbn(book.isbn()))
@@ -34,9 +42,7 @@ class CatalogTests {
 
     @Test
     void updateChangesExistingBook() {
-        var catalog = new Catalog(repo);
-        var original = new Book("9780132350884", "Clean Code", "Robert C. Martin");
-        catalog.add(original);
+        catalog.add(new Book("9780132350884", "Clean Code", "Robert C. Martin"));
 
         var revised = new Book("9780132350884", "Cleaner Code", "Bob Martin");
         catalog.update(revised);
@@ -52,7 +58,7 @@ class CatalogTests {
 
     @Test
     void addFailsIfThereIsAnId() {
-        assertThatThrownBy(() -> new Catalog(repo).add(
+        assertThatThrownBy(() -> catalog.add(
                 new Book(
                         5L,
                         "9780132350884",
@@ -64,7 +70,6 @@ class CatalogTests {
 
     @Test
     void addThrowsWhenIsbnAlreadyExists() {
-        var catalog = new Catalog(repo);
         var book = new Book("9780132350884", "Clean Code", "Robert C. Martin");
         catalog.add(book);
 
@@ -76,10 +81,12 @@ class CatalogTests {
 
     @Test
     void updateThrowsWhenIsbnUnknown() {
-        var catalog = new Catalog(repo);
-        var unknown = new Book("9780132350884", "Clean Code", "Robert C. Martin");
-
-        assertThatThrownBy(() -> catalog.update(unknown))
+        assertThatThrownBy(() -> catalog.update(
+                new Book(
+                        "9780132350884",
+                        "Clean Code",
+                        "Robert C. Martin"
+                )))
                 .isInstanceOf(BookNotFoundException.class);
         // verify no extra rows were written
         assertThat(repo.count()).isZero();
