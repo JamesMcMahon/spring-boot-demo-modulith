@@ -14,8 +14,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/// Web-layer slice test (`@WebMvcTest`) – focuses on error handling.
-/// [Catalog] is mocked; its logic is covered elsewhere.
+/// Web-layer slice that verifies **error paths** for [CatalogController].
+///
+/// **This test is for error logic implemented specifically in the controller
+/// layer that is untested by domain tests.**
+///
+/// All domain behavior is mocked – we only assert HTTP contract for failures.
 @WebMvcTest(CatalogController.class)
 class CatalogControllerErrorTests {
 
@@ -35,13 +39,13 @@ class CatalogControllerErrorTests {
 
     @Test
     void updateReturns400OnIsbnMismatch() throws Exception {
-        mvc.perform(patch("/catalog/books/{isbn}", "9780596007126")
+        mvc.perform(patch("/catalog/books/{isbn}", "initial-isbn")
                         .contentType("application/json")
                         .content("""
                                 {
-                                  "isbn": "9999999999999",
-                                  "title": "Head First Design Patterns",
-                                  "author": "Eric Freeman"
+                                  "isbn": "mismatched-isbn",
+                                  "title": "Crown of Horns",
+                                  "author": "Jeff Smith"
                                 }"""))
                 .andExpect(status().isBadRequest());
     }
