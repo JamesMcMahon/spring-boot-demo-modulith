@@ -61,8 +61,8 @@ class CatalogTests {
         assertThatThrownBy(() -> catalog.add(
                 new Book(
                         5L,
-                        "9780439706261",
-                        "Rock Jaw",
+                        "1888963034",
+                        "Rock Jaw: Master of the Eastern Border",
                         "Jeff Smith"
                 )))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -91,5 +91,21 @@ class CatalogTests {
                 .isInstanceOf(BookNotFoundException.class);
         // verify no extra rows were written
         assertThat(repo.count()).isZero();
+    }
+
+    @Test
+    void byIsbnFindsBooks() {
+        var isbn = "1888963050";
+        var addedBook = catalog.add(new Book(isbn, "Old Man's Cave", "Jeff Smith"));
+
+        assertThat(catalog.byIsbn(isbn))
+                .isPresent()
+                .get()
+                .isEqualTo(addedBook);
+    }
+
+    @Test
+    void byIsbnReturnsEmptyWhenIsbnUnknown() {
+        assertThat(catalog.byIsbn("unknown-isbn")).isNotPresent();
     }
 }
