@@ -25,7 +25,7 @@ class InventoryTests {
 
     @BeforeEach
     void setup() {
-        inventory = new Inventory(copyRepo, bookRepo);
+        inventory = new Inventory(copyRepo, new Catalog(bookRepo));
     }
 
     @Test

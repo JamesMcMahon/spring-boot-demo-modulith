@@ -2,7 +2,6 @@ package sh.jfm.springbootdemos.modulith.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sh.jfm.springbootdemos.modulith.data.BookRepository;
 import sh.jfm.springbootdemos.modulith.data.CopyRepository;
 import sh.jfm.springbootdemos.modulith.model.Copy;
 
@@ -15,19 +14,18 @@ import sh.jfm.springbootdemos.modulith.model.Copy;
 public class Inventory {
 
     private final CopyRepository copiesRepo;
-    private final BookRepository booksRepo;
+    private final Catalog catalog;
 
-    public Inventory(CopyRepository copies,
-                     BookRepository booksRepo) {
+    public Inventory(CopyRepository copies, Catalog catalog) {
         this.copiesRepo = copies;
-        this.booksRepo = booksRepo;
+        this.catalog = catalog;
     }
 
     public Copy add(Copy copy) {
         if (copy.id() != null) {
             throw new IllegalArgumentException("Copy ID must be null when creating a new copy");
         }
-        if (!booksRepo.existsByIsbn(copy.isbn())) {
+        if (!catalog.existsByIsbn(copy.isbn())) {
             throw new BookNotFoundException(copy.isbn());
         }
         return copiesRepo.save(copy);

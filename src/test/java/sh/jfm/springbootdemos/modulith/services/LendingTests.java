@@ -34,7 +34,7 @@ class LendingTests {
 
     @BeforeEach
     void setUp() {
-        inventory = new Inventory(copies, books);
+        inventory = new Inventory(copies, new Catalog(books));
         lending = new Lending(inventory, patrons, loans);
         patronId = patrons.save(new Patron(null)).id();
     }

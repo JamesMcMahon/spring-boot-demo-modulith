@@ -108,4 +108,12 @@ class CatalogTests {
     void byIsbnReturnsEmptyWhenIsbnUnknown() {
         assertThat(catalog.byIsbn("unknown-isbn")).isNotPresent();
     }
+
+    @Test
+    void existsByIsbnReturnsIfBooksExists() {
+        catalog.add(new Book("9780545135436", "Rose", "Jeff Smith"));
+        assertThat(catalog.existsByIsbn("9780545135436")).isTrue();
+
+        assertThat(catalog.existsByIsbn("unknown-isbn")).isFalse();
+    }
 }

@@ -43,4 +43,8 @@ public class Catalog {
     public Optional<Book> byIsbn(String isbn) {
         return bookRepo.findByIsbn(isbn);
     }
+
+    public boolean existsByIsbn(String isbn) {
+        return bookRepo.existsByIsbn(isbn);
+    }
 }
