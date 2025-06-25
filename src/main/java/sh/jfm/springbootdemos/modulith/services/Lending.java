@@ -18,24 +18,24 @@ import java.util.List;
 public class Lending {
 
     private final Inventory inventory;
-    private final PatronRepository patrons;
-    private final LoanRepository loans;
+    private final PatronRepository patronsRepo;
+    private final LoanRepository loansRepo;
 
     public Lending(Inventory inventory,
-                   PatronRepository patrons,
-                   LoanRepository loans) {
+                   PatronRepository patronsRepo,
+                   LoanRepository loansRepo) {
         this.inventory = inventory;
-        this.patrons = patrons;
-        this.loans = loans;
+        this.patronsRepo = patronsRepo;
+        this.loansRepo = loansRepo;
     }
 
     public Loan borrow(long patronId, String isbn) {
-        if (!patrons.existsById(patronId)) {
+        if (!patronsRepo.existsById(patronId)) {
             throw new PatronNotFoundException(patronId);
         }
 
         var lentCopy = inventory.lendAvailableCopy(isbn);
-        return loans.save(new Loan(
+        return loansRepo.save(new Loan(
                 lentCopy.id(),
                 isbn,
                 patronId,
@@ -44,18 +44,18 @@ public class Lending {
     }
 
     public void returnBook(long patronId, String isbn) {
-        var loan = loans.findByPatronIdAndIsbn(patronId, isbn)
+        var loan = loansRepo.findByPatronIdAndIsbn(patronId, isbn)
                 .orElseThrow(() -> new LoanNotFoundException(patronId, isbn));
 
-        loans.deleteById(loan.id());
+        loansRepo.deleteById(loan.id());
         inventory.returnCopy(loan.copyId());
     }
 
     @Transactional(readOnly = true)
     public List<Loan> findLoansForPatron(long patronId) {
-        if (!patrons.existsById(patronId)) {
+        if (!patronsRepo.existsById(patronId)) {
             throw new PatronNotFoundException(patronId);
         }
-        return loans.findByPatronId(patronId);
+        return loansRepo.findByPatronId(patronId);
     }
 }

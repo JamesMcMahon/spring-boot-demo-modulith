@@ -17,30 +17,30 @@ import java.util.Optional;
 @Transactional
 public class Catalog {
 
-    private final BookRepository repo;
+    private final BookRepository bookRepo;
 
-    public Catalog(BookRepository repo) {
-        this.repo = repo;
+    public Catalog(BookRepository bookRepo) {
+        this.bookRepo = bookRepo;
     }
 
     public Book add(Book book) {
         if (book.id() != null) {
             throw new IllegalArgumentException("Book ID must be null when creating a new book");
         }
-        if (repo.existsByIsbn(book.isbn())) {
+        if (bookRepo.existsByIsbn(book.isbn())) {
             throw new BookAlreadyExistsException(book.isbn());
         }
-        return repo.save(book);
+        return bookRepo.save(book);
     }
 
     public void update(Book book) {
-        var existing = repo.findByIsbn(book.isbn())
+        var existing = bookRepo.findByIsbn(book.isbn())
                 .orElseThrow(() -> new BookNotFoundException(book.isbn()));
-        repo.save(new Book(existing.id(), book.isbn(), book.title(), book.author()));
+        bookRepo.save(new Book(existing.id(), book.isbn(), book.title(), book.author()));
     }
 
     @Transactional(readOnly = true)
     public Optional<Book> byIsbn(String isbn) {
-        return repo.findByIsbn(isbn);
+        return bookRepo.findByIsbn(isbn);
     }
 }

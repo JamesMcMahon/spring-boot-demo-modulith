@@ -14,41 +14,41 @@ import sh.jfm.springbootdemos.modulith.model.Copy;
 @Transactional
 public class Inventory {
 
-    private final CopyRepository copies;
-    private final BookRepository books;
+    private final CopyRepository copiesRepo;
+    private final BookRepository booksRepo;
 
     public Inventory(CopyRepository copies,
-                     BookRepository books) {
-        this.copies = copies;
-        this.books = books;
+                     BookRepository booksRepo) {
+        this.copiesRepo = copies;
+        this.booksRepo = booksRepo;
     }
 
     public Copy add(Copy copy) {
         if (copy.id() != null) {
             throw new IllegalArgumentException("Copy ID must be null when creating a new copy");
         }
-        if (!books.existsByIsbn(copy.isbn())) {
+        if (!booksRepo.existsByIsbn(copy.isbn())) {
             throw new BookNotFoundException(copy.isbn());
         }
-        return copies.save(copy);
+        return copiesRepo.save(copy);
     }
 
     public void remove(long id) {
-        if (!copies.existsById(id)) {
+        if (!copiesRepo.existsById(id)) {
             throw new CopyNotFoundException(id);
         }
-        copies.deleteById(id);
+        copiesRepo.deleteById(id);
     }
 
     @Transactional(readOnly = true)
     public long availability(String isbn) {
-        return copies.countByIsbnAndAvailableTrue(isbn);
+        return copiesRepo.countByIsbnAndAvailableTrue(isbn);
     }
 
     public void setAvailability(long id, boolean available) {
-        var existing = copies.findById(id)
+        var existing = copiesRepo.findById(id)
                 .orElseThrow(() -> new CopyNotFoundException(id));
-        copies.save(new Copy(
+        copiesRepo.save(new Copy(
                 id,
                 existing.isbn(),
                 existing.location(),
@@ -61,7 +61,7 @@ public class Inventory {
     }
 
     public Copy lendAvailableCopy(String isbn) {
-        var copy = copies.findFirstByIsbnAndAvailableTrue(isbn)
+        var copy = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
                 .orElseThrow(() -> new NoAvailableCopiesException(isbn));
         setAvailability(copy.id(), false);
         return copy;
