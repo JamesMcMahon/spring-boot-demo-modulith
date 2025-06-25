@@ -106,7 +106,7 @@ class InventoryTests {
     }
 
     @Test
-    void lendAvailableCopyMarksCopyUnavailableAndReturnsIt() {
+    void markAsUnavailableMarksCopyAsUnavailable() {
         // arrange
         var isbn = "9780000009999";
         bookRepo.save(new Book(isbn, "Borrowable Book", "Some Author"));
@@ -115,10 +115,10 @@ class InventoryTests {
         assertThat(inventory.availability(isbn)).isEqualTo(1);
 
         // act
-        var lent = inventory.lendAvailableCopy(isbn);
+        var unavailableCopy = inventory.markAsUnavailable(isbn);
 
         // assert – same copy returned, now unavailable and no copies free
-        assertThat(lent.id()).isEqualTo(copy.id());
+        assertThat(unavailableCopy.id()).isEqualTo(copy.id());
         assertThat(copyRepo.findById(copy.id()))
                 .map(Copy::available)
                 .contains(false);
@@ -126,16 +126,13 @@ class InventoryTests {
     }
 
     @Test
-    void lendAvailableCopyThrowsWhenNoAvailableCopies() {
-        var isbn = "9780000008888";
-        bookRepo.save(new Book(isbn, "Unborrowable Book", "Some Author"));
-
-        assertThatThrownBy(() -> inventory.lendAvailableCopy(isbn))
+    void markAsUnavailableThrowsWhenNoAvailableCopies() {
+        assertThatThrownBy(() -> inventory.markAsUnavailable("already-unavailable-isbn"))
                 .isInstanceOf(NoAvailableCopiesException.class);
     }
 
     @Test
-    void returnCopyMarksCopyAvailableAndIncrementsCount() {
+    void markAsAvailableMarksCopyAsAvailableAndIncrementsCount() {
         // arrange – persist book and one copy, then mark it unavailable
         var isbn = "9780000007777";
         bookRepo.save(new Book(isbn, "Returned-Book", "Some Author"));
@@ -144,7 +141,7 @@ class InventoryTests {
         assertThat(inventory.availability(isbn)).isZero();
 
         // act – return the copy
-        inventory.returnCopy(copy.id());
+        inventory.markAsAvailable(copy.id());
 
         // assert – copy is now available and counted
         assertThat(copyRepo.findById(copy.id()))

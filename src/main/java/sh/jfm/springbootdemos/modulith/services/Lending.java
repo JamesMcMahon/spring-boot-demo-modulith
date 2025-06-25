@@ -34,7 +34,7 @@ public class Lending {
             throw new PatronNotFoundException(patronId);
         }
 
-        var lentCopy = inventory.lendAvailableCopy(isbn);
+        var lentCopy = inventory.markAsUnavailable(isbn);
         return loansRepo.save(new Loan(
                 lentCopy.id(),
                 isbn,
@@ -48,7 +48,7 @@ public class Lending {
                 .orElseThrow(() -> new LoanNotFoundException(patronId, isbn));
 
         loansRepo.deleteById(loan.id());
-        inventory.returnCopy(loan.copyId());
+        inventory.markAsAvailable(loan.copyId());
     }
 
     @Transactional(readOnly = true)

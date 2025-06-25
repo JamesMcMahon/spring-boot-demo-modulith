@@ -54,11 +54,11 @@ public class Inventory {
         ));
     }
 
-    public void returnCopy(long copyId) {
+    public void markAsAvailable(long copyId) {
         setAvailability(copyId, true);
     }
 
-    public Copy lendAvailableCopy(String isbn) {
+    public Copy markAsUnavailable(String isbn) {
         var copy = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
                 .orElseThrow(() -> new NoAvailableCopiesException(isbn));
         setAvailability(copy.id(), false);
