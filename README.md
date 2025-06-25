@@ -7,6 +7,37 @@ A modular Spring Boot application for managing a library's book catalog, invento
 This application is designed as a modular monolith using Spring Boot and follows domain-driven design principles. 
 It provides functionality for managing books, tracking inventory, and handling lending transactions.
 
+## 🗺️ Domain
+
+```mermaid
+graph TD
+%% external actor
+    User("User")
+%% Catalog domain
+    subgraph CatalogDomain["Catalog"]
+        Books["Books"]
+    end
+
+%% Inventory domain
+    subgraph InventoryDomain["Inventory"]
+        Copies["Copies"]
+    end
+
+%% Lending domain
+    subgraph LendingDomain["Lending"]
+        Loans["Loans"]
+        Patrons["Patrons"]
+    end
+
+%% user → domain interactions (domain verbs)
+    User -- " add / update / view " --> CatalogDomain
+    User -- " add / remove Copies\nset availability\ncheck availability " --> InventoryDomain
+    User -- " borrow / return Books\nview active Loans " --> LendingDomain
+%% domain → domain interactions
+    InventoryDomain -- " validate Book exists " --> CatalogDomain
+    LendingDomain -- " lend / return Copies " --> InventoryDomain
+```
+
 ## 📚 Catalog API – sample curl commands
 
 ### 1. Add a new book
