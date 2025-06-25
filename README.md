@@ -31,8 +31,8 @@ graph TD
 
 %% user → domain interactions (domain verbs)
     User -- " add / update / view " --> CatalogDomain
-    User -- " add / remove Copies\nset availability\ncheck availability " --> InventoryDomain
-    User -- " borrow / return Books\nview active Loans " --> LendingDomain
+    User -- " add / remove Copies<br>set availability<br>check availability " --> InventoryDomain
+    User -- " borrow / return Books<br>view active Loans " --> LendingDomain
 %% domain → domain interactions
     InventoryDomain -- " validate Book exists " --> CatalogDomain
     LendingDomain -- " lend / return Copies " --> InventoryDomain
