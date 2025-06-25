@@ -20,6 +20,7 @@ class InventoryTests {
     private BookRepository bookRepo;
     @Autowired
     private CopyRepository copyRepo;
+
     private Inventory inventory;
 
     @BeforeEach
@@ -54,7 +55,7 @@ class InventoryTests {
         bookRepo.save(new Book("9781416928171", "Bunnicula Meets Edgar Allan Crow", "James Howe"));
 
         assertThatThrownBy(
-                () -> new Inventory(copyRepo, bookRepo).
+                () -> inventory.
                         add(new Copy(1L, "9781416928171", "Main Library", true))
         )
                 .isInstanceOf(IllegalArgumentException.class);
@@ -128,7 +129,6 @@ class InventoryTests {
     void lendAvailableCopyThrowsWhenNoAvailableCopies() {
         var isbn = "9780000008888";
         bookRepo.save(new Book(isbn, "Unborrowable Book", "Some Author"));
-        var inventory = new Inventory(copyRepo, bookRepo);
 
         assertThatThrownBy(() -> inventory.lendAvailableCopy(isbn))
                 .isInstanceOf(NoAvailableCopiesException.class);
