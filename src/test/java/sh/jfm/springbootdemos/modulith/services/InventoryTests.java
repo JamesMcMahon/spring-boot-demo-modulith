@@ -140,8 +140,8 @@ class InventoryTests {
         var isbn = "9780000007777";
         bookRepo.save(new Book(isbn, "Returned-Book", "Some Author"));
         var copy = inventory.add(new Copy(isbn, "Main Library"));
-        inventory.setAvailability(copy.id(), false);              // simulate loan
-        assertThat(inventory.availability(isbn)).isZero();        // none available
+        inventory.setAvailability(copy.id(), false);
+        assertThat(inventory.availability(isbn)).isZero();
 
         // act – return the copy
         inventory.returnCopy(copy.id());
