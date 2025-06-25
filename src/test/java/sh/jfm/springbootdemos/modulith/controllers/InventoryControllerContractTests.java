@@ -67,7 +67,8 @@ class InventoryControllerContractTests {
 
     @Test
     void setAvailabilityReturns204() throws Exception {
-        doNothing().when(inventory).setAvailability(42L, false);
+        when(inventory.setAvailability(42L, false))
+                .thenReturn(new Copy(42L, "978-1416928171", "A-1", false));
 
         mvc.perform(patch("/inventory/copies/{id}", 42L)
                         .content("{\"available\":false}")

@@ -43,10 +43,10 @@ public class Inventory {
         return copiesRepo.countByIsbnAndAvailableTrue(isbn);
     }
 
-    public void setAvailability(long id, boolean available) {
+    public Copy setAvailability(long id, boolean available) {
         var existing = copiesRepo.findById(id)
                 .orElseThrow(() -> new CopyNotFoundException(id));
-        copiesRepo.save(new Copy(
+        return copiesRepo.save(new Copy(
                 id,
                 existing.isbn(),
                 existing.location(),
@@ -61,7 +61,6 @@ public class Inventory {
     public Copy markAsUnavailable(String isbn) {
         var copy = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
                 .orElseThrow(() -> new NoAvailableCopiesException(isbn));
-        setAvailability(copy.id(), false);
-        return copy;
+        return setAvailability(copy.id(), false);
     }
 }

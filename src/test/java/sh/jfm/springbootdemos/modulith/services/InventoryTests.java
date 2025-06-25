@@ -119,9 +119,7 @@ class InventoryTests {
 
         // assert – same copy returned, now unavailable and no copies free
         assertThat(unavailableCopy.id()).isEqualTo(copy.id());
-        assertThat(copyRepo.findById(copy.id()))
-                .map(Copy::available)
-                .contains(false);
+        assertThat(unavailableCopy.available()).isEqualTo(false);
         assertThat(inventory.availability(isbn)).isZero();
     }
 
