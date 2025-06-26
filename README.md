@@ -11,6 +11,7 @@ If you want to see the latest version of this README look at the HEAD commit on 
 
 - [AppContinuum](https://www.appcontinuum.io)
 - [Monolith To Microservices](https://samnewman.io/books/monolith-to-microservices/)
+- [Monolith First](https://martinfowler.com/bliki/MonolithFirst.html)
 
 ## Overview
 
