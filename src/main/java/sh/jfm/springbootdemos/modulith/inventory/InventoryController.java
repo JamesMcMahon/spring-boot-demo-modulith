@@ -33,18 +33,6 @@ class InventoryController {
                 .body(inserted);
     }
 
-    private record AvailabilityUpdateRequest(boolean available) {
-    }
-
-    @PatchMapping("/copies/{copyId}")
-    ResponseEntity<Void> setAvailability(
-            @PathVariable long copyId,
-            @RequestBody AvailabilityUpdateRequest request
-    ) {
-        inventory.setAvailability(copyId, request.available());
-        return ResponseEntity.noContent().build();
-    }
-
     @DeleteMapping("/copies/{copyId}")
     ResponseEntity<Void> delete(@PathVariable long copyId) {
         inventory.remove(copyId);

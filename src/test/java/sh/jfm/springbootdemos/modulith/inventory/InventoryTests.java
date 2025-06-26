@@ -84,28 +84,7 @@ class InventoryTests {
     }
 
     @Test
-    void setAvailabilityTogglesFlagAndAffectsCount() {
-        // arrange – persist a referenced book and one available copy
-        bookRepo.save(new Book("9780000000001", "Some Book", "Some Author"));
-        var copy = inventory.add(new Copy("9780000000001", "Main Library"));
-
-        assertThat(inventory.availability("9780000000001")).isEqualTo(1);
-
-        // act – mark copy unavailable
-        inventory.setAvailability(copy.id(), false);
-
-        // assert – count dropped
-        assertThat(inventory.availability("9780000000001")).isEqualTo(0);
-
-        // act – mark available again
-        inventory.setAvailability(copy.id(), true);
-
-        // assert – count restored
-        assertThat(inventory.availability("9780000000001")).isEqualTo(1);
-    }
-
-    @Test
-    void markNextCopyAsUnavailableUpdatesAvailablity() {
+    void markNextCopyAsUnavailableUpdatesAvailability() {
         // arrange
         var isbn = "9780000009999";
         bookRepo.save(new Book(isbn, "Borrowable Book", "Some Author"));
@@ -134,7 +113,7 @@ class InventoryTests {
         var isbn = "9780000007777";
         bookRepo.save(new Book(isbn, "Returned-Book", "Some Author"));
         var copy = inventory.add(new Copy(isbn, "Main Library"));
-        inventory.setAvailability(copy.id(), false);
+        inventory.markNextCopyAsUnavailable(isbn);
         assertThat(inventory.availability(isbn)).isZero();
 
         // act – return the copy

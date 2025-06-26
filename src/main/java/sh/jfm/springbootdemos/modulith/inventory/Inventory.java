@@ -42,24 +42,24 @@ public class Inventory {
         return copiesRepo.countByIsbnAndAvailableTrue(isbn);
     }
 
-    public Copy setAvailability(long id, boolean available) {
-        var existing = copiesRepo.findById(id)
-                .orElseThrow(() -> new CopyNotFoundException(id));
+    public void markAsAvailable(long copyId) {
+        var existing = copiesRepo.findById(copyId)
+                .orElseThrow(() -> new CopyNotFoundException(copyId));
+        updateCopyAvailability(existing, true);
+    }
+
+    public Copy markNextCopyAsUnavailable(String isbn) {
+        var existing = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
+                .orElseThrow(() -> new NoAvailableCopiesException(isbn));
+        return updateCopyAvailability(existing, false);
+    }
+
+    private Copy updateCopyAvailability(Copy existing, boolean available) {
         return copiesRepo.save(new Copy(
-                id,
+                existing.id(),
                 existing.isbn(),
                 existing.location(),
                 available
         ));
-    }
-
-    public void markAsAvailable(long copyId) {
-        setAvailability(copyId, true);
-    }
-
-    public Copy markNextCopyAsUnavailable(String isbn) {
-        var copy = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
-                .orElseThrow(() -> new NoAvailableCopiesException(isbn));
-        return setAvailability(copy.id(), false);
     }
 }
