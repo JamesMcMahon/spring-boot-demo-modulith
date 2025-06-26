@@ -1,0 +1,99 @@
+package sh.jfm.springbootdemos.modulith.lending;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import sh.jfm.springbootdemos.modulith.catalog.Book;
+import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
+import sh.jfm.springbootdemos.modulith.catalog.Catalog;
+import sh.jfm.springbootdemos.modulith.inventory.Copy;
+import sh.jfm.springbootdemos.modulith.inventory.CopyRepository;
+import sh.jfm.springbootdemos.modulith.inventory.Inventory;
+import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@DataJdbcTest
+class LendingTests {
+
+    @Autowired
+    private BookRepository books;
+    @Autowired
+    private CopyRepository copies;
+    @Autowired
+    private PatronRepository patrons;
+    @Autowired
+    private LoanRepository loans;
+
+    private Inventory inventory;
+    private Lending lending;
+    private long patronId;
+
+    @BeforeEach
+    void setUp() {
+        inventory = new Inventory(copies, new Catalog(books));
+        lending = new Lending(inventory, patrons, loans);
+        patronId = patrons.save(new Patron(null)).id();
+    }
+
+    @Test
+    void borrowCreatesLoanAndMarksCopyUnavailable() {
+        var loan = borrowBook("123");
+
+        assertThat(loans.findById(loan.id())).isPresent();
+        assertThat(copies.findById(loan.copyId()))
+                .get()
+                .extracting(Copy::available)
+                .isEqualTo(false);
+        assertThat(inventory.availability("123")).isZero();
+    }
+
+    @Test
+    void borrowThrowsWhenNoCopiesFree() {
+        borrowBook("123");
+
+        assertThatThrownBy(() -> lending.borrow(patronId, "123"))
+                .isInstanceOf(NoAvailableCopiesException.class);
+    }
+
+    @Test
+    void returnDeletesLoanAndReturnsCopy() {
+        var loan = borrowBook("123");
+
+        lending.returnBook(patronId, "123");
+
+        assertThat(loans.existsById(loan.id())).isFalse();
+        assertThat(inventory.availability("123")).isEqualTo(1);
+    }
+
+    @Test
+    void findLoansReturnsOnlyLoansForPatron() {
+        var loanForPatron = borrowBook("123");
+
+        assertThat(lending.findLoansForPatron(patronId))
+                .containsExactly(loanForPatron);
+    }
+
+    @Test
+    void findLoansReturnsEmptyAfterReturn() {
+        borrowBook("123");
+        lending.returnBook(patronId, "123");
+
+        assertThat(lending.findLoansForPatron(patronId)).isEmpty();
+    }
+
+    @Test
+    void findLoansForPatronThrowsWhenPatronMissing() {
+        assertThatThrownBy(() -> lending.findLoansForPatron(42L))
+                .isInstanceOf(PatronNotFoundException.class);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private Loan borrowBook(String isbn) {
+        books.save(new Book(null, isbn, "Title", "Author"));
+        copies.save(new Copy(null, isbn, "A-1", true));
+        return lending.borrow(patronId, isbn);
+    }
+}
