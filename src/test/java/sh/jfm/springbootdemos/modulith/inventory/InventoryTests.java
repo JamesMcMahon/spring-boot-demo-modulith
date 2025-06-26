@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import sh.jfm.springbootdemos.modulith.catalog.Book;
-import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
 import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 
@@ -69,7 +68,7 @@ class InventoryTests {
                 () -> inventory.
                         add(new Copy("unknown-isbn", "Main Library"))
         )
-                .isInstanceOf(BookNotFoundException.class);
+                .isInstanceOf(InvalidCopyException.class);
 
         assertThat(copyRepo.count()).isZero();
     }

@@ -6,12 +6,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import sh.jfm.springbootdemos.modulith.catalog.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.CopyNotFoundException;
+import sh.jfm.springbootdemos.modulith.inventory.InvalidCopyException;
 import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.LoanNotFoundException;
 import sh.jfm.springbootdemos.modulith.lending.PatronNotFoundException;
 
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 /// Centralizes translation of domain exceptions to HTTP status codes,
 /// avoiding scattered try/catch in controllers.
@@ -31,6 +31,11 @@ public class RestExceptionAdvice {
     @ExceptionHandler(CopyNotFoundException.class)
     ResponseEntity<Void> handleCopyMissing() {
         return ResponseEntity.status(NOT_FOUND).build();
+    }
+
+    @ExceptionHandler(InvalidCopyException.class)
+    ResponseEntity<Void> handleInvalidCopy() {
+        return ResponseEntity.status(BAD_REQUEST).build();
     }
 
     @ExceptionHandler(PatronNotFoundException.class)

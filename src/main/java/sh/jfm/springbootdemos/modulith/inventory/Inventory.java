@@ -2,7 +2,6 @@ package sh.jfm.springbootdemos.modulith.inventory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 
 /// Business rules for managing physical copies
@@ -26,7 +25,7 @@ public class Inventory {
             throw new IllegalArgumentException("Copy ID must be null when creating a new copy");
         }
         if (!catalog.existsByIsbn(copy.isbn())) {
-            throw new BookNotFoundException(copy.isbn());
+            throw new InvalidCopyException(copy.isbn());
         }
         return copiesRepo.save(copy);
     }

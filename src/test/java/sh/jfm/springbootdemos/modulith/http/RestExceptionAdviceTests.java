@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import sh.jfm.springbootdemos.modulith.catalog.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.CopyNotFoundException;
+import sh.jfm.springbootdemos.modulith.inventory.InvalidCopyException;
 import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.LoanNotFoundException;
 import sh.jfm.springbootdemos.modulith.lending.PatronNotFoundException;
@@ -62,6 +63,12 @@ class RestExceptionAdviceTests {
     }
 
     @Test
+    void invalidCopyMapsTo400() throws Exception {
+        mvc.perform(get("/invalid-copy"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void loanNotFoundMapsTo409() throws Exception {
         mvc.perform(get("/loan-missing"))
                 .andExpect(status().isConflict());
@@ -93,6 +100,11 @@ class RestExceptionAdviceTests {
         @GetMapping("/no-copies")
         void throwNoCopies() {
             throw new NoAvailableCopiesException("123");
+        }
+
+        @GetMapping("/invalid-copy")
+        void throwInvalidCopy() {
+            throw new InvalidCopyException("123");
         }
 
         @GetMapping("/loan-missing")
