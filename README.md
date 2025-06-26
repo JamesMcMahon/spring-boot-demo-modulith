@@ -20,6 +20,13 @@ key milestones.
 Spring Boot and Spring Modulith are used as implementation tools, though the principles apply to other languages
 and frameworks.
 
+### Tags
+
+- `v1-functional-groups` - Application split into groups that represent functionality.
+  This is a common pattern in many frameworks and applications.
+  I've personally found that this pattern doesn't evolve very well and tends to lead to coupling and expensive changes.
+  Refer to the [AppContinuum](https://www.appcontinuum.io) for a more extensive write-up.
+
 ### 🗺️ Domain
 
 ```mermaid
