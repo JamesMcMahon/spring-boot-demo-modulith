@@ -27,32 +27,26 @@ class RestExceptionAdviceTests {
     @BeforeEach
     void setUp() {
         mvc = MockMvcBuilders
-                .standaloneSetup(new FailingController())      // minimal controller
-                .setControllerAdvice(new RestExceptionAdvice()) // advice under test
+                .standaloneSetup(new FailingController())
+                .setControllerAdvice(new RestExceptionAdvice())
                 .build();
     }
 
     @Test
     void bookAlreadyExistsMapsTo409() throws Exception {
-        mvc.perform(get("/exists"))
-                .andExpect(status().isConflict());                  // 409
+        mvc.perform(get("/book-exists"))
+                .andExpect(status().isConflict());
     }
 
     @Test
     void bookNotFoundMapsTo404() throws Exception {
-        mvc.perform(get("/missing"))
-                .andExpect(status().isNotFound());                  // 404
+        mvc.perform(get("/book-missing"))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     void copyNotFoundMapsTo404() throws Exception {
         mvc.perform(get("/copy-missing"))
-                .andExpect(status().isNotFound());
-    }
-
-    @Test
-    void patronNotFoundMapsTo404() throws Exception {
-        mvc.perform(get("/patron-missing"))
                 .andExpect(status().isNotFound());
     }
 
@@ -69,6 +63,12 @@ class RestExceptionAdviceTests {
     }
 
     @Test
+    void patronNotFoundMapsTo404() throws Exception {
+        mvc.perform(get("/patron-missing"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void loanNotFoundMapsTo409() throws Exception {
         mvc.perform(get("/loan-missing"))
                 .andExpect(status().isConflict());
@@ -77,24 +77,19 @@ class RestExceptionAdviceTests {
     @RestController
     static class FailingController {
 
-        @GetMapping("/exists")
-        void throwExists() {
+        @GetMapping("/book-exists")
+        void throwBookExists() {
             throw new BookAlreadyExistsException("123");
         }
 
-        @GetMapping("/missing")
-        void throwMissing() {
+        @GetMapping("/book-missing")
+        void throwBookMissing() {
             throw new BookNotFoundException("123");
         }
 
         @GetMapping("/copy-missing")
         void throwCopyMissing() {
             throw new CopyNotFoundException(42L);
-        }
-
-        @GetMapping("/patron-missing")
-        void throwPatronMissing() {
-            throw new PatronNotFoundException(99L);
         }
 
         @GetMapping("/no-copies")
@@ -105,6 +100,11 @@ class RestExceptionAdviceTests {
         @GetMapping("/invalid-copy")
         void throwInvalidCopy() {
             throw new InvalidCopyException("123");
+        }
+
+        @GetMapping("/patron-missing")
+        void throwPatronMissing() {
+            throw new PatronNotFoundException(99L);
         }
 
         @GetMapping("/loan-missing")

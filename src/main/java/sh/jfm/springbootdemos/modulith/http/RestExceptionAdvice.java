@@ -38,13 +38,18 @@ public class RestExceptionAdvice {
         return ResponseEntity.status(BAD_REQUEST).build();
     }
 
+    @ExceptionHandler(NoAvailableCopiesException.class)
+    ResponseEntity<Void> handleNoAvailableCopies() {
+        return ResponseEntity.status(CONFLICT).build();
+    }
+
     @ExceptionHandler(PatronNotFoundException.class)
     ResponseEntity<Void> handlePatronMissing() {
         return ResponseEntity.status(NOT_FOUND).build();
     }
 
-    @ExceptionHandler({NoAvailableCopiesException.class, LoanNotFoundException.class})
-    ResponseEntity<Void> handleLoanConflicts() {
+    @ExceptionHandler(LoanNotFoundException.class)
+    ResponseEntity<Void> handleLoanNotFound() {
         return ResponseEntity.status(CONFLICT).build();
     }
 }
