@@ -58,7 +58,7 @@ class LibraryJourneyTests {
         systemShowsAvailableCopies(tddByExampleIsbn, 1);
     }
 
-    private void publisherAddsBookToCatalog(String isbn, String title, String author) {
+    private static void publisherAddsBookToCatalog(String isbn, String title, String author) {
         given().contentType(ContentType.JSON)
                 .body("""
                         {"isbn":"%s","title":"%s","author":"%s"}
@@ -67,7 +67,7 @@ class LibraryJourneyTests {
                 .then().statusCode(201);
     }
 
-    private void librarianSeesBookDetails(String isbn, String title, String author) {
+    private static void librarianSeesBookDetails(String isbn, String title, String author) {
         given().accept(ContentType.JSON)
                 .when().get("/catalog/books/{isbn}", isbn)
                 .then().statusCode(200)
@@ -76,7 +76,7 @@ class LibraryJourneyTests {
                         """.formatted(isbn, title, author)));
     }
 
-    private void publisherUpdatesBookDetails(String isbn, String title, String author) {
+    private static void publisherUpdatesBookDetails(String isbn, String title, String author) {
         given().contentType(ContentType.JSON)
                 .body("""
                         {"isbn":"%s","title":"%s","author":"%s"}
@@ -85,7 +85,7 @@ class LibraryJourneyTests {
                 .then().statusCode(204);
     }
 
-    private long librarianRegistersCopy(String isbn, String location) {
+    private static long librarianRegistersCopy(String isbn, String location) {
         return given().contentType(ContentType.JSON)
                 .body("""
                         {"isbn":"%s","location":"%s"}
@@ -95,14 +95,14 @@ class LibraryJourneyTests {
                 .extract().jsonPath().getLong("id");
     }
 
-    private void systemShowsAvailableCopies(String isbn, int expectedAvailable) {
+    private static void systemShowsAvailableCopies(String isbn, int expectedAvailable) {
         given().accept(ContentType.JSON)
                 .when().get("/inventory/books/{isbn}/availability", isbn)
                 .then().statusCode(200)
                 .body("available", equalTo(expectedAvailable));
     }
 
-    private long systemCreatesAPatron() {
+    private static long systemCreatesAPatron() {
         return given()
                 .contentType(ContentType.JSON)
                 .when().post("/lending/patrons")
@@ -110,7 +110,7 @@ class LibraryJourneyTests {
                 .extract().jsonPath().getLong("id");
     }
 
-    private void patronBorrowsBook(long patronId, String isbn, long expectedCopyId) {
+    private static void patronBorrowsBook(long patronId, String isbn, long expectedCopyId) {
         given().contentType(ContentType.JSON)
                 .body("""
                         {"patronId":%d,"isbn":"%s"}
@@ -121,7 +121,7 @@ class LibraryJourneyTests {
                 .body("copyId", equalTo((int) expectedCopyId));
     }
 
-    private void patronReturnsBook(long patronId, String isbn) {
+    private static void patronReturnsBook(long patronId, String isbn) {
         given().contentType(ContentType.JSON)
                 .body("""
                         {"patronId":%d,"isbn":"%s"}
