@@ -58,7 +58,7 @@ public class Inventory {
         setAvailability(copyId, true);
     }
 
-    public Copy markAsUnavailable(String isbn) {
+    public Copy markNextCopyAsUnavailable(String isbn) {
         var copy = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
                 .orElseThrow(() -> new NoAvailableCopiesException(isbn));
         return setAvailability(copy.id(), false);

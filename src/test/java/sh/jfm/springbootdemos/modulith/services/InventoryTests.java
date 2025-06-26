@@ -106,7 +106,7 @@ class InventoryTests {
     }
 
     @Test
-    void markAsUnavailableMarksCopyAsUnavailable() {
+    void markNextCopyAsUnavailableUpdatesAvailablity() {
         // arrange
         var isbn = "9780000009999";
         bookRepo.save(new Book(isbn, "Borrowable Book", "Some Author"));
@@ -115,7 +115,7 @@ class InventoryTests {
         assertThat(inventory.availability(isbn)).isEqualTo(1);
 
         // act
-        var unavailableCopy = inventory.markAsUnavailable(isbn);
+        var unavailableCopy = inventory.markNextCopyAsUnavailable(isbn);
 
         // assert – same copy returned, now unavailable and no copies free
         assertThat(unavailableCopy.id()).isEqualTo(copy.id());
@@ -124,8 +124,8 @@ class InventoryTests {
     }
 
     @Test
-    void markAsUnavailableThrowsWhenNoAvailableCopies() {
-        assertThatThrownBy(() -> inventory.markAsUnavailable("already-unavailable-isbn"))
+    void markNextCopyAsUnavailableThrowsWhenNoAvailableCopies() {
+        assertThatThrownBy(() -> inventory.markNextCopyAsUnavailable("already-unavailable-isbn"))
                 .isInstanceOf(NoAvailableCopiesException.class);
     }
 
