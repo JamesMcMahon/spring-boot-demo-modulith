@@ -32,10 +32,4 @@ class InventoryController {
                 .created(URI.create("/inventory/copies/" + inserted.id()))
                 .body(inserted);
     }
-
-    @DeleteMapping("/copies/{copyId}")
-    ResponseEntity<Void> delete(@PathVariable long copyId) {
-        inventory.remove(copyId);
-        return ResponseEntity.noContent().build();
-    }
 }

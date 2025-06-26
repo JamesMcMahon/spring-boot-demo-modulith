@@ -134,16 +134,6 @@ curl -i http://localhost:8080/inventory/books/9781416928171/availability
 
 • HTTP 200 with a payload like `{"available":1}`.
 
-##### 3. Remove a copy
-
-```bash
-curl -i -X DELETE http://localhost:8080/inventory/copies/{copyId}
-```
-
-• HTTP 204 No Content on success.
-
-> Replace `{copyId}` with the id returned in step 1.
-
 #### 🔄 Lending API
 
 ##### 1. Borrow a book

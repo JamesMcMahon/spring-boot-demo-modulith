@@ -7,10 +7,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.json.JsonCompareMode.STRICT;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /// Web-layer slice test focused on the successful, happy-path contract.
@@ -61,13 +61,5 @@ class InventoryControllerContractTests {
                         {
                           "available": 3
                         }""", STRICT));
-    }
-
-    @Test
-    void deleteReturns204() throws Exception {
-        doNothing().when(inventory).remove(42L);
-
-        mvc.perform(delete("/inventory/copies/{id}", 42L))
-                .andExpect(status().isNoContent());
     }
 }

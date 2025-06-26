@@ -30,13 +30,6 @@ public class Inventory {
         return copiesRepo.save(copy);
     }
 
-    public void remove(long id) {
-        if (!copiesRepo.existsById(id)) {
-            throw new CopyNotFoundException(id);
-        }
-        copiesRepo.deleteById(id);
-    }
-
     @Transactional(readOnly = true)
     public long availability(String isbn) {
         return copiesRepo.countByIsbnAndAvailableTrue(isbn);

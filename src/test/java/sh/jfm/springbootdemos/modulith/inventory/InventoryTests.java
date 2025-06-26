@@ -40,16 +40,6 @@ class InventoryTests {
     }
 
     @Test
-    void removeDeletesCopy() {
-        bookRepo.save(new Book("9780671698097", "The Celery Stalks at Midnight", "Deborah and James Howe"));
-        var inserted = inventory.add(new Copy("9780671698097", "Main Library"));
-
-        inventory.remove(inserted.id());
-
-        assertThat(copyRepo.count()).isZero();
-    }
-
-    @Test
     void addThrowsWhenIdIsPresent() {
         bookRepo.save(new Book("9781416928171", "Bunnicula Meets Edgar Allan Crow", "James Howe"));
 
@@ -69,16 +59,6 @@ class InventoryTests {
                         add(new Copy("unknown-isbn", "Main Library"))
         )
                 .isInstanceOf(InvalidCopyException.class);
-
-        assertThat(copyRepo.count()).isZero();
-    }
-
-    @Test
-    void removeThrowsWhenIdMissing() {
-        bookRepo.save(new Book("9780689315484", "Nighty-Nightmare", "Deborah and James Howe"));
-
-        assertThatThrownBy(() -> inventory.remove(12345L))
-                .isInstanceOf(CopyNotFoundException.class);
 
         assertThat(copyRepo.count()).isZero();
     }
