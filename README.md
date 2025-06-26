@@ -82,6 +82,8 @@ The service starts at <http://localhost:8080>.
 
 ### Curl Examples
 
+*All commands assume the app is running locally on port 8080; adjust as needed.*
+
 #### 📚 Catalog API
 
 ##### 1. Add a new book
@@ -112,8 +114,6 @@ curl -i -X PATCH http://localhost:8080/catalog/books/9780132350884 \
 
 • HTTP 204 No Content on success.
 
-The commands assume the app is running locally on port 8080; adjust as needed.
-
 #### 📦 Inventory API
 
 ##### 1. Add a copy of a book
@@ -121,7 +121,7 @@ The commands assume the app is running locally on port 8080; adjust as needed.
 ```bash
 curl -i -X POST http://localhost:8080/inventory/copies \
      -H 'Content-Type: application/json' \
-     -d '{"isbn":"9781416928171","location":"Main Library"}'
+     -d '{"isbn":"9780132350884","location":"Main Library"}'
 ```
 
 • HTTP 201 Created, *Location* header contains `/inventory/copies/{copyId}` with the generated numeric id.
@@ -129,7 +129,7 @@ curl -i -X POST http://localhost:8080/inventory/copies \
 ##### 2. Check availability
 
 ```bash
-curl -i http://localhost:8080/inventory/books/9781416928171/availability
+curl -i http://localhost:8080/inventory/books/9780132350884/availability
 ```
 
 • HTTP 200 with a payload like `{"available":1}`.
@@ -141,7 +141,7 @@ curl -i http://localhost:8080/inventory/books/9781416928171/availability
 ```bash
 curl -i -X POST http://localhost:8080/lending/loans \
      -H 'Content-Type: application/json' \
-     -d '{"patronId":1,"isbn":"9781416928171"}'
+     -d '{"patronId":1,"isbn":"9780132350884"}'
 ```
 
 • HTTP 201 Created, *Location* header set to `/lending/loans/{loanId}`.
@@ -151,7 +151,7 @@ curl -i -X POST http://localhost:8080/lending/loans \
 ```bash
 curl -i -X POST http://localhost:8080/lending/returns \
      -H 'Content-Type: application/json' \
-     -d '{"patronId":1,"isbn":"9781416928171"}'
+     -d '{"patronId":1,"isbn":"9780132350884"}'
 ```
 
 • HTTP 204 No Content on success.
