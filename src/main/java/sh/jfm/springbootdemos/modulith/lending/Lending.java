@@ -49,6 +49,13 @@ public class Lending {
         inventory.markAsAvailable(loan.copyId());
     }
 
+    public Patron addPatron(Patron patron) {
+        if (patron.id() != null) {
+            throw new IllegalArgumentException("Patron ID must be null when creating a new patron");
+        }
+        return patronsRepo.save(patron);
+    }
+
     @Transactional(readOnly = true)
     public List<Loan> findLoansForPatron(long patronId) {
         if (!patronsRepo.existsById(patronId)) {

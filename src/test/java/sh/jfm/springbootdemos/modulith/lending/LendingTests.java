@@ -19,13 +19,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class LendingTests {
 
     @Autowired
-    private BookRepository books;
+    private BookRepository bookRepo;
     @Autowired
-    private CopyRepository copies;
+    private CopyRepository copyRepo;
     @Autowired
-    private PatronRepository patrons;
+    private PatronRepository patronRepo;
     @Autowired
-    private LoanRepository loans;
+    private LoanRepository loanRepo;
 
     private Inventory inventory;
     private Lending lending;
@@ -33,17 +33,17 @@ class LendingTests {
 
     @BeforeEach
     void setUp() {
-        inventory = new Inventory(copies, new Catalog(books));
-        lending = new Lending(inventory, patrons, loans);
-        patronId = patrons.save(new Patron(null)).id();
+        inventory = new Inventory(copyRepo, new Catalog(bookRepo));
+        lending = new Lending(inventory, patronRepo, loanRepo);
+        patronId = lending.addPatron(new Patron()).id();
     }
 
     @Test
     void borrowCreatesLoanAndMarksCopyUnavailable() {
         var loan = borrowBook("123");
 
-        assertThat(loans.findById(loan.id())).isPresent();
-        assertThat(copies.findById(loan.copyId()))
+        assertThat(loanRepo.findById(loan.id())).isPresent();
+        assertThat(copyRepo.findById(loan.copyId()))
                 .get()
                 .extracting(Copy::available)
                 .isEqualTo(false);
@@ -64,7 +64,7 @@ class LendingTests {
 
         lending.returnBook(patronId, "123");
 
-        assertThat(loans.existsById(loan.id())).isFalse();
+        assertThat(loanRepo.existsById(loan.id())).isFalse();
         assertThat(inventory.availability("123")).isEqualTo(1);
     }
 
@@ -90,10 +90,22 @@ class LendingTests {
                 .isInstanceOf(PatronNotFoundException.class);
     }
 
+    @Test
+    void addPatronInsertsPatron() {
+        var saved = lending.addPatron(new Patron());
+        assertThat(patronRepo.findById(saved.id())).isPresent();
+    }
+
+    @Test
+    void addPatronFailsWhenIdPresent() {
+        assertThatThrownBy(() -> lending.addPatron(new Patron(666L)))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @SuppressWarnings("SameParameterValue")
     private Loan borrowBook(String isbn) {
-        books.save(new Book(null, isbn, "Title", "Author"));
-        copies.save(new Copy(null, isbn, "A-1", true));
+        bookRepo.save(new Book(isbn, "Title", "Author"));
+        copyRepo.save(new Copy(isbn, "A-1"));
         return lending.borrow(patronId, isbn);
     }
 }

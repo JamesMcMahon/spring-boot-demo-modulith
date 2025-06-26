@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
 import sh.jfm.springbootdemos.modulith.inventory.CopyRepository;
-import sh.jfm.springbootdemos.modulith.lending.Patron;
 import sh.jfm.springbootdemos.modulith.lending.PatronRepository;
 
 import static io.restassured.RestAssured.given;
@@ -30,15 +29,12 @@ class LibraryJourneyTests {
     @LocalServerPort
     private int port;
 
-    private long patronId;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
         copies.deleteAll();
         books.deleteAll();
         patrons.deleteAll();
-        patronId = patrons.save(new Patron(null)).id();
     }
 
     @Test
@@ -54,6 +50,7 @@ class LibraryJourneyTests {
         var copyId = librarianRegistersCopy(tddByExampleIsbn, "LOC-1");
         systemShowsAvailableCopies(tddByExampleIsbn, 1);
 
+        var patronId = systemCreatesAPatron();
         patronBorrowsBook(patronId, tddByExampleIsbn, copyId);
         systemShowsAvailableCopies(tddByExampleIsbn, 0);
 
@@ -103,6 +100,14 @@ class LibraryJourneyTests {
                 .when().get("/inventory/books/{isbn}/availability", isbn)
                 .then().statusCode(200)
                 .body("available", equalTo(expectedAvailable));
+    }
+
+    private long systemCreatesAPatron() {
+        return given()
+                .contentType(ContentType.JSON)
+                .when().post("/lending/patrons")
+                .then().statusCode(201)
+                .extract().jsonPath().getLong("id");
     }
 
     private void patronBorrowsBook(long patronId, String isbn, long expectedCopyId) {

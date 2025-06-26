@@ -9,13 +9,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.LocalDate;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.json.JsonCompareMode.STRICT;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /// Web-layer slice test focused on the successful, happy-path contract.
 @WebMvcTest(LendingController.class)
@@ -68,6 +68,17 @@ class LendingControllerContractTests {
                                   "isbn": "978-1606994740"
                                 }"""))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void createPatronReturns201WithLocationAndBody() throws Exception {
+        when(lending.addPatron(any(Patron.class))).thenReturn(new Patron(1L));
+
+        mvc.perform(post("/lending/patrons")
+                        .contentType("application/json"))
+                .andExpect(status().isCreated())
+                .andExpect(header().string("Location", "/lending/patrons/1"))
+                .andExpect(content().json("{\"id\":1}", STRICT));
     }
 
     @Test

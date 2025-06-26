@@ -136,7 +136,15 @@ curl -i http://localhost:8080/inventory/books/9780132350884/availability
 
 #### 🔄 Lending API
 
-##### 1. Borrow a book
+##### 1. Create a patron
+
+```bash
+curl -i -X POST http://localhost:8080/lending/patrons
+```
+
+• HTTP 201 Created, *Location* header set to `/lending/patrons/{patronId}`.
+
+##### 2. Borrow a book
 
 ```bash
 curl -i -X POST http://localhost:8080/lending/loans \
@@ -146,7 +154,7 @@ curl -i -X POST http://localhost:8080/lending/loans \
 
 • HTTP 201 Created, *Location* header set to `/lending/loans/{loanId}`.
 
-##### 2. Return a book
+##### 3. Return a book
 
 ```bash
 curl -i -X POST http://localhost:8080/lending/returns \
@@ -156,7 +164,7 @@ curl -i -X POST http://localhost:8080/lending/returns \
 
 • HTTP 204 No Content on success.
 
-##### 3. List active loans for a patron
+##### 4. List active loans for a patron
 
 ```bash
 curl -i http://localhost:8080/lending/patrons/1/loans

@@ -4,6 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +33,14 @@ class LendingController {
     ResponseEntity<Void> returnBook(@RequestBody BorrowRequest request) {
         lending.returnBook(request.patronId(), request.isbn());
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/patrons")
+    ResponseEntity<Patron> createPatron() {
+        var created = lending.addPatron(new Patron());
+        return ResponseEntity
+                .created(URI.create("/lending/patrons/" + created.id()))
+                .body(created);
     }
 
     @GetMapping("/patrons/{patronId}/loans")
