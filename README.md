@@ -22,10 +22,21 @@ and frameworks.
 
 ### Tags
 
-- `v1-functional-groups` - Application split into groups that represent functionality.
-  This is a common pattern in many frameworks and applications.
-  I've personally found that this pattern doesn't evolve very well and tends to lead to coupling and expensive changes.
-  Refer to the [AppContinuum](https://www.appcontinuum.io) for a more extensive write-up.
+For the *why* behind these steps, refer to the [AppContinuum](https://www.appcontinuum.io) for a more extensive
+write-up.
+
+- `v1-functional-groups` - Application organized into groups representing functionality.
+  While this is a common pattern in many frameworks and applications,
+  in my experience it tends not to evolve well and often leads to tight coupling and costly changes.
+
+- `v2-bounded-contexts` - Application organized into groups
+  representing [bounded contexts](https://martinfowler.com/bliki/BoundedContext.html) (also known as Feature Groups).
+  This approach provides the necessary isolation to establish clear boundaries for discrete components.
+  Simply reorganizing the code this way often reveals coupling issues.
+  The package-based approach makes adjusting boundaries straightforward and balances
+  flexibility with structure, especially in domains that are still evolving and require further discovery.
+  For some applications, this represents an appropriate final architecture, though it ultimately depends on domain
+  complexity and scaling needs.
 
 ### 🗺️ Domain
 
@@ -103,7 +114,7 @@ curl -i -X POST http://localhost:8080/catalog/books \
      -d '{"isbn":"9780836218657","title":"The Essential Calvin and Hobbes","author":"Bill Watterson"}'
 ```
 
-• HTTP 201 Created, *Location* header set to `/catalog/books/9780132350884`.
+• HTTP 201 Created, *Location* header set to `/catalog/books/9780836218657`.
 
 ##### 2. Retrieve a book
 
@@ -116,7 +127,7 @@ curl -i http://localhost:8080/catalog/books/9780836218657
 ##### 3. Update a book
 
 ```bash
-     curl -i -X PATCH http://localhost:8080/catalog/books/9780836218657 \
+curl -i -X PATCH http://localhost:8080/catalog/books/9780836218657 \
      -H 'Content-Type: application/json' \
      -d '{"isbn":"9780836218657","title":"The Essential Calvin and Hobbes","author":"William B. Watterson II"}'
 ```
