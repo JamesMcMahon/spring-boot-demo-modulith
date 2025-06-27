@@ -23,11 +23,14 @@ class InventoryController {
     }
 
     private record NewCopyRequest(String isbn, String location) {
+        Copy toCopy() {
+            return new Copy(isbn, location);
+        }
     }
 
     @PostMapping("/copies")
-    ResponseEntity<Copy> add(@RequestBody NewCopyRequest body) {
-        var inserted = inventory.add(new Copy(body.isbn(), body.location()));
+    ResponseEntity<Copy> add(@RequestBody NewCopyRequest newCopy) {
+        var inserted = inventory.add(newCopy.toCopy());
         return ResponseEntity
                 .created(URI.create("/inventory/copies/" + inserted.id()))
                 .body(inserted);
