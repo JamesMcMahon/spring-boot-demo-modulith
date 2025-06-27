@@ -35,9 +35,12 @@ class LendingController {
         return ResponseEntity.noContent().build();
     }
 
+    private record NewPatronRequest(String firstName, String lastName) {
+    }
+
     @PostMapping("/patrons")
-    ResponseEntity<Patron> createPatron() {
-        var created = lending.addPatron(new Patron());
+    ResponseEntity<Patron> createPatron(@RequestBody NewPatronRequest body) {
+        var created = lending.addPatron(new Patron(body.firstName(), body.lastName()));
         return ResponseEntity
                 .created(URI.create("/lending/patrons/" + created.id()))
                 .body(created);

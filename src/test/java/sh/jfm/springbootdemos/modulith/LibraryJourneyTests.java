@@ -105,6 +105,9 @@ class LibraryJourneyTests {
     private static long systemCreatesAPatron() {
         return given()
                 .contentType(ContentType.JSON)
+                .body("""
+                        {"firstName":"John","lastName":"Doe"}
+                        """)
                 .when().post("/lending/patrons")
                 .then().statusCode(201)
                 .extract().jsonPath().getLong("id");

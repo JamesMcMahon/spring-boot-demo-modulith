@@ -139,7 +139,9 @@ curl -i http://localhost:8080/inventory/books/9780132350884/availability
 ##### 1. Create a patron
 
 ```bash
-curl -i -X POST http://localhost:8080/lending/patrons
+curl -i -X POST http://localhost:8080/lending/patrons \
+     -H 'Content-Type: application/json' \
+     -d '{"firstName":"Jane","lastName":"Doe"}'
 ```
 
 • HTTP 201 Created, *Location* header set to `/lending/patrons/{patronId}`.

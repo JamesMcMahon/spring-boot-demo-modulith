@@ -35,7 +35,7 @@ class LendingTests {
     void setUp() {
         inventory = new Inventory(copyRepo, new Catalog(bookRepo));
         lending = new Lending(inventory, patronRepo, loanRepo);
-        patronId = lending.addPatron(new Patron()).id();
+        patronId = lending.addPatron(new Patron("Test", "User")).id();
     }
 
     @Test
@@ -92,13 +92,13 @@ class LendingTests {
 
     @Test
     void addPatronInsertsPatron() {
-        var saved = lending.addPatron(new Patron());
+        var saved = lending.addPatron(new Patron("Test", "User"));
         assertThat(patronRepo.findById(saved.id())).isPresent();
     }
 
     @Test
     void addPatronFailsWhenIdPresent() {
-        assertThatThrownBy(() -> lending.addPatron(new Patron(666L)))
+        assertThatThrownBy(() -> lending.addPatron(new Patron(666L, "Test", "User")))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

@@ -72,13 +72,19 @@ class LendingControllerContractTests {
 
     @Test
     void createPatronReturns201WithLocationAndBody() throws Exception {
-        when(lending.addPatron(any(Patron.class))).thenReturn(new Patron(1L));
+        when(lending.addPatron(any(Patron.class)))
+                .thenReturn(new Patron(1L, "Jane", "Doe"));
 
         mvc.perform(post("/lending/patrons")
-                        .contentType("application/json"))
+                        .contentType("application/json")
+                        .content("""
+                                {"firstName":"Jane","lastName":"Doe"}
+                                """))
                 .andExpect(status().isCreated())
                 .andExpect(header().string("Location", "/lending/patrons/1"))
-                .andExpect(content().json("{\"id\":1}", STRICT));
+                .andExpect(content().json("""
+                        {"id":1,"firstName":"Jane","lastName":"Doe"}
+                        """, STRICT));
     }
 
     @Test
