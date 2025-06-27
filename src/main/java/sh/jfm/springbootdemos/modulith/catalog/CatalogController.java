@@ -17,9 +17,15 @@ class CatalogController {
         this.catalog = catalog;
     }
 
+    private record BookRequest(String isbn, String title, String author) {
+        Book toBook() {
+            return new Book(isbn, title, author);
+        }
+    }
+
     @PostMapping
-    ResponseEntity<Book> create(@RequestBody Book bookToCreate) {
-        var inserted = catalog.add(bookToCreate);
+    ResponseEntity<Book> create(@RequestBody BookRequest bookToCreate) {
+        var inserted = catalog.add(bookToCreate.toBook());
         return ResponseEntity
                 .created(URI.create("/catalog/books/" + inserted.isbn()))
                 .body(inserted);
@@ -33,11 +39,14 @@ class CatalogController {
     }
 
     @PatchMapping("/{isbn}")
-    ResponseEntity<Void> update(@PathVariable String isbn, @RequestBody Book book) {
-        if (!isbn.equals(book.isbn())) {
+    ResponseEntity<Void> update(
+            @PathVariable String isbn,
+            @RequestBody BookRequest bookToUpdate
+    ) {
+        if (!isbn.equals(bookToUpdate.isbn())) {
             return ResponseEntity.badRequest().build();
         }
-        catalog.update(book);
+        catalog.update(bookToUpdate.toBook());
         return ResponseEntity.noContent().build();
     }
 }
