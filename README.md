@@ -91,7 +91,7 @@ The service starts at <http://localhost:8080>.
 ```bash
 curl -i -X POST http://localhost:8080/catalog/books \
      -H 'Content-Type: application/json' \
-     -d '{"isbn":"9780132350884","title":"Clean Code","author":"Robert C. Martin"}'
+     -d '{"isbn":"9780836218657","title":"The Essential Calvin and Hobbes","author":"Bill Watterson"}'
 ```
 
 • HTTP 201 Created, *Location* header set to `/catalog/books/9780132350884`.
@@ -99,7 +99,7 @@ curl -i -X POST http://localhost:8080/catalog/books \
 ##### 2. Retrieve a book
 
 ```bash
-curl -i http://localhost:8080/catalog/books/9780132350884
+curl -i http://localhost:8080/catalog/books/9780836218657
 ```
 
 • HTTP 200 with the JSON payload.
@@ -107,9 +107,9 @@ curl -i http://localhost:8080/catalog/books/9780132350884
 ##### 3. Update a book
 
 ```bash
-curl -i -X PATCH http://localhost:8080/catalog/books/9780132350884 \
+     curl -i -X PATCH http://localhost:8080/catalog/books/9780836218657 \
      -H 'Content-Type: application/json' \
-     -d '{"isbn":"9780132350884","title":"Cleaner Code","author":"Bob Martin"}'
+     -d '{"isbn":"9780836218657","title":"The Essential Calvin and Hobbes","author":"William B. Watterson II"}'
 ```
 
 • HTTP 204 No Content on success.
@@ -121,7 +121,7 @@ curl -i -X PATCH http://localhost:8080/catalog/books/9780132350884 \
 ```bash
 curl -i -X POST http://localhost:8080/inventory/copies \
      -H 'Content-Type: application/json' \
-     -d '{"isbn":"9780132350884","location":"Main Library"}'
+     -d '{"isbn":"9780836218657","location":"Main Library"}'
 ```
 
 • HTTP 201 Created, *Location* header contains `/inventory/copies/{copyId}` with the generated numeric id.
@@ -129,7 +129,7 @@ curl -i -X POST http://localhost:8080/inventory/copies \
 ##### 2. Check availability
 
 ```bash
-curl -i http://localhost:8080/inventory/books/9780132350884/availability
+curl -i http://localhost:8080/inventory/books/9780836218657/availability
 ```
 
 • HTTP 200 with a payload like `{"available":1}`.
@@ -141,7 +141,7 @@ curl -i http://localhost:8080/inventory/books/9780132350884/availability
 ```bash
 curl -i -X POST http://localhost:8080/lending/patrons \
      -H 'Content-Type: application/json' \
-     -d '{"firstName":"Jane","lastName":"Doe"}'
+     -d '{"firstName":"Susie","lastName":"Derkins"}'
 ```
 
 • HTTP 201 Created, *Location* header set to `/lending/patrons/{patronId}`.
@@ -151,7 +151,7 @@ curl -i -X POST http://localhost:8080/lending/patrons \
 ```bash
 curl -i -X POST http://localhost:8080/lending/loans \
      -H 'Content-Type: application/json' \
-     -d '{"patronId":1,"isbn":"9780132350884"}'
+     -d '{"patronId":1,"isbn":"9780836218657"}'
 ```
 
 • HTTP 201 Created, *Location* header set to `/lending/loans/{loanId}`.
@@ -161,7 +161,7 @@ curl -i -X POST http://localhost:8080/lending/loans \
 ```bash
 curl -i -X POST http://localhost:8080/lending/returns \
      -H 'Content-Type: application/json' \
-     -d '{"patronId":1,"isbn":"9780132350884"}'
+     -d '{"patronId":1,"isbn":"9780836218657"}'
 ```
 
 • HTTP 204 No Content on success.
