@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import sh.jfm.springbootdemos.modulith.data.BookRepository;
-import sh.jfm.springbootdemos.modulith.data.CopyRepository;
-import sh.jfm.springbootdemos.modulith.data.PatronRepository;
+import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
+import sh.jfm.springbootdemos.modulith.inventory.CopyRepository;
+import sh.jfm.springbootdemos.modulith.lending.PatronRepository;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
