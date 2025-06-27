@@ -74,6 +74,13 @@ graph TD
 
 The service starts at <http://localhost:8080>.
 
+#### API documentation
+
+Once the application is running you can explore the REST endpoints via Swagger / OpenAPI:
+
+* Swagger UI – <http://localhost:8080/swagger-ui.html>
+* Raw OpenAPI spec – <http://localhost:8080/v3/api-docs>
+
 #### Run the tests
 
 ```bash
@@ -83,6 +90,8 @@ The service starts at <http://localhost:8080>.
 ### Curl Examples
 
 *All commands assume the app is running locally on port 8080; adjust as needed.*
+
+If preferred, you can use [Swagger](http://localhost:8080/swagger-ui.html) to execute the commands.
 
 #### 📚 Catalog API
 

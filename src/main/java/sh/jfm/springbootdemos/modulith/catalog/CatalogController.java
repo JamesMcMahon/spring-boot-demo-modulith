@@ -1,5 +1,7 @@
 package sh.jfm.springbootdemos.modulith.catalog;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,10 @@ class CatalogController {
         }
     }
 
+    @Operation(
+            summary = "Create a new book",
+            tags = {"01 Catalog – Add Book"}
+    )
     @PostMapping
     ResponseEntity<Book> create(@RequestBody BookRequest bookToCreate) {
         var inserted = catalog.add(bookToCreate.toBook());
@@ -31,16 +37,24 @@ class CatalogController {
                 .body(inserted);
     }
 
+    @Operation(
+            summary = "Get book details by ISBN",
+            tags = {"02 Catalog – Retrieve Book"}
+    )
     @GetMapping("/{isbn}")
-    ResponseEntity<Book> byIsbn(@PathVariable String isbn) {
+    ResponseEntity<Book> byIsbn(@Parameter(description = "ISBN of the book") @PathVariable String isbn) {
         return catalog.byIsbn(isbn)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(
+            summary = "Update an existing book",
+            tags = {"03 Catalog – Update Book"}
+    )
     @PatchMapping("/{isbn}")
     ResponseEntity<Void> update(
-            @PathVariable String isbn,
+            @Parameter(description = "ISBN of the book") @PathVariable String isbn,
             @RequestBody BookRequest bookToUpdate
     ) {
         if (!isbn.equals(bookToUpdate.isbn())) {

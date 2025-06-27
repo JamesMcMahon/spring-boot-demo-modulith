@@ -1,5 +1,7 @@
 package sh.jfm.springbootdemos.modulith.inventory;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,8 +19,12 @@ class InventoryController {
         this.inventory = inventory;
     }
 
+    @Operation(
+            summary = "Get number of available copies",
+            tags = {"05 Inventory – Check Availability"}
+    )
     @GetMapping("/books/{isbn}/availability")
-    Map<String, Long> availability(@PathVariable String isbn) {
+    Map<String, Long> availability(@Parameter(description = "ISBN of the book") @PathVariable String isbn) {
         return Map.of("available", inventory.availability(isbn));
     }
 
@@ -28,6 +34,10 @@ class InventoryController {
         }
     }
 
+    @Operation(
+            summary = "Register a new copy of a book",
+            tags = {"04 Inventory – Add Copy"}
+    )
     @PostMapping("/copies")
     ResponseEntity<Copy> add(@RequestBody NewCopyRequest newCopy) {
         var inserted = inventory.add(newCopy.toCopy());
