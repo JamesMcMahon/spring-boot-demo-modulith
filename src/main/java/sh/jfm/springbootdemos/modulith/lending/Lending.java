@@ -19,9 +19,9 @@ public class Lending {
     private final PatronRepository patronsRepo;
     private final LoanRepository loansRepo;
 
-    public Lending(Inventory inventory,
-                   PatronRepository patronsRepo,
-                   LoanRepository loansRepo) {
+    Lending(Inventory inventory,
+            PatronRepository patronsRepo,
+            LoanRepository loansRepo) {
         this.inventory = inventory;
         this.patronsRepo = patronsRepo;
         this.loansRepo = loansRepo;

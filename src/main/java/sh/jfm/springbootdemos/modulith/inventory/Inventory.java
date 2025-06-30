@@ -15,7 +15,7 @@ public class Inventory {
     private final CopyRepository copiesRepo;
     private final Catalog catalog;
 
-    public Inventory(CopyRepository copies, Catalog catalog) {
+    Inventory(CopyRepository copies, Catalog catalog) {
         this.copiesRepo = copies;
         this.catalog = catalog;
     }

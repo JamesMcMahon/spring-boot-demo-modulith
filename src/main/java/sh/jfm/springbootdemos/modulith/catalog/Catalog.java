@@ -17,7 +17,7 @@ public class Catalog {
 
     private final BookRepository bookRepo;
 
-    public Catalog(BookRepository bookRepo) {
+    Catalog(BookRepository bookRepo) {
         this.bookRepo = bookRepo;
     }
 

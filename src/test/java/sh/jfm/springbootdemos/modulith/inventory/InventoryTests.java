@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.context.annotation.Import;
 import sh.jfm.springbootdemos.modulith.catalog.Book;
-import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
 import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -13,23 +13,24 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 /// Tests [Inventory] with a real H2 DB (`@DataJdbcTest`)
 @DataJdbcTest
+@Import(Catalog.class)
 class InventoryTests {
 
     @Autowired
-    private BookRepository bookRepo;
-    @Autowired
     private CopyRepository copyRepo;
+    @Autowired
+    private Catalog catalog;
 
     private Inventory inventory;
 
     @BeforeEach
     void setup() {
-        inventory = new Inventory(copyRepo, new Catalog(bookRepo));
+        inventory = new Inventory(copyRepo, catalog);
     }
 
     @Test
     void addInsertsCopy() {
-        bookRepo.save(new Book("9780671698096", "Howliday Inn", "Deborah and James Howe"));
+        catalog.add(new Book("9780671698096", "Howliday Inn", "Deborah and James Howe"));
 
         var inserted = inventory.add(new Copy("9780671698096", "Main Library"));
 
@@ -41,7 +42,7 @@ class InventoryTests {
 
     @Test
     void addThrowsWhenIdIsPresent() {
-        bookRepo.save(new Book("9781416928171", "Bunnicula Meets Edgar Allan Crow", "James Howe"));
+        catalog.add(new Book("9781416928171", "Bunnicula Meets Edgar Allan Crow", "James Howe"));
 
         assertThatThrownBy(
                 () -> inventory.
@@ -67,7 +68,7 @@ class InventoryTests {
     void markNextCopyAsUnavailableUpdatesAvailability() {
         // arrange
         var isbn = "9780000009999";
-        bookRepo.save(new Book(isbn, "Borrowable Book", "Some Author"));
+        catalog.add(new Book(isbn, "Borrowable Book", "Some Author"));
         var copy = inventory.add(new Copy(isbn, "Main Library"));
 
         assertThat(inventory.availability(isbn)).isEqualTo(1);
@@ -91,7 +92,7 @@ class InventoryTests {
     void markAsAvailableMarksCopyAsAvailableAndIncrementsCount() {
         // arrange – persist book and one copy, then mark it unavailable
         var isbn = "9780000007777";
-        bookRepo.save(new Book(isbn, "Returned-Book", "Some Author"));
+        catalog.add(new Book(isbn, "Returned-Book", "Some Author"));
         var copy = inventory.add(new Copy(isbn, "Main Library"));
         inventory.markNextCopyAsUnavailable(isbn);
         assertThat(inventory.availability(isbn)).isZero();
