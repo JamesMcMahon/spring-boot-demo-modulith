@@ -43,29 +43,29 @@ write-up.
 ```mermaid
 graph TD
 %% external actor
-    User("User")
+  User("User")
 %% Catalog domain
-    subgraph CatalogDomain["Catalog"]
-        Books["Books"]
-    end
+  subgraph CatalogDomain["Catalog"]
+    Books["Books"]
+  end
 
 %% Inventory domain
-    subgraph InventoryDomain["Inventory"]
-        Copies["Copies"]
-    end
+  subgraph InventoryDomain["Inventory"]
+    Copies["Copies"]
+  end
 
 %% Lending domain
-    subgraph LendingDomain["Lending"]
-        Loans["Loans"]
-        Patrons["Patrons"]
-    end
+  subgraph LendingDomain["Lending"]
+    Loans["Loans"]
+    Patrons["Patrons"]
+  end
 
 %% user → domain interactions (domain verbs)
-    User -- " Add / Update / View Books " --> CatalogDomain
+  User -- " Add / Update / View Books " --> CatalogDomain
   User -- " Add Copies<br>Check Availability " --> InventoryDomain
-    User -- " Borrow / Return Books<br>View Active Loans " --> LendingDomain
+  User -- " Borrow / Return Books<br>View Active Loans " --> LendingDomain
 %% domain → domain interactions
-    InventoryDomain -- " Validate Book Exists " --> CatalogDomain
+  InventoryDomain -- " Validate Book Exists " --> CatalogDomain
   LendingDomain -- " Update Copy Availability " --> InventoryDomain
 ```
 
