@@ -28,7 +28,6 @@ write-up.
 - `v1-functional-groups` - Application organized into groups representing functionality.
   While this is a common pattern in many frameworks and applications,
   in my experience it tends not to evolve well and often leads to tight coupling and costly changes.
-
 - `v2-bounded-contexts` - Application organized into groups
   representing [bounded contexts](https://martinfowler.com/bliki/BoundedContext.html) (also known as Feature Groups).
   This approach provides the necessary isolation to establish clear boundaries for discrete components.
@@ -37,6 +36,10 @@ write-up.
   flexibility with structure, especially in domains that are still evolving and require further discovery.
   For some applications, this represents an appropriate final architecture, though it ultimately depends on domain
   complexity and scaling needs.
+- `v3-spring-modules` - Using Spring Modulith's `@ApplicationModule`, we have taken a lightweight approach to enforcing
+  component boundaries. The boundaries are not enforced at compile time, but running by running the test suite, we can
+  ensure
+  that the application doesn't drift from our defined components or their explicitly defined dependencies.
 
 ### 🗺️ Domain
 
