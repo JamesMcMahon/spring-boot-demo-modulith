@@ -69,15 +69,15 @@ graph TD
   LendingDomain -- " Update Copy Availability " --> InventoryDomain
 ```
 
-### Modules
+### Components
 
 ```mermaid
 graph TD
   subgraph LibraryApplication
-    catalog[Catalog<br><sub>Module</sub>]
-    inventory[Inventory<br><sub>Module</sub>]
-    lending[Lending<br><sub>Module</sub>]
-    http[Http<br><sub>Module</sub>]
+    catalog[Catalog<br><sub>Component</sub>]
+    inventory[Inventory<br><sub>Component</sub>]
+    lending[Lending<br><sub>Component</sub>]
+    http[Http<br><sub>Component</sub>]
   end
 
 %% Relationships
