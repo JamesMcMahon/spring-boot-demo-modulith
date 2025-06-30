@@ -4,12 +4,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import sh.jfm.springbootdemos.modulith.catalog.BookRepository;
-import sh.jfm.springbootdemos.modulith.inventory.CopyRepository;
-import sh.jfm.springbootdemos.modulith.lending.PatronRepository;
 
 import static io.restassured.RestAssured.given;
 import static net.javacrumbs.jsonunit.JsonMatchers.jsonEquals;
@@ -19,22 +15,12 @@ import static org.hamcrest.Matchers.equalTo;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LibraryJourneyTests {
 
-    @Autowired
-    private BookRepository books;
-    @Autowired
-    private CopyRepository copies;
-    @Autowired
-    private PatronRepository patrons;
-
     @LocalServerPort
     private int port;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
-        copies.deleteAll();
-        books.deleteAll();
-        patrons.deleteAll();
     }
 
     @Test
