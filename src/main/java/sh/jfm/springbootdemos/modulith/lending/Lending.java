@@ -1,8 +1,10 @@
 package sh.jfm.springbootdemos.modulith.lending;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import sh.jfm.springbootdemos.modulith.inventory.Inventory;
+import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,13 +20,18 @@ public class Lending {
     private final Inventory inventory;
     private final PatronRepository patronsRepo;
     private final LoanRepository loansRepo;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    Lending(Inventory inventory,
+    Lending(
+            Inventory inventory,
             PatronRepository patronsRepo,
-            LoanRepository loansRepo) {
+            LoanRepository loansRepo,
+            ApplicationEventPublisher applicationEventPublisher
+    ) {
         this.inventory = inventory;
         this.patronsRepo = patronsRepo;
         this.loansRepo = loansRepo;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     public Loan borrow(long patronId, String isbn) {
@@ -46,7 +53,9 @@ public class Lending {
                 .orElseThrow(() -> new LoanNotFoundException(patronId, isbn));
 
         loansRepo.deleteById(loan.id());
-        inventory.markAsAvailable(loan.copyId());
+        applicationEventPublisher.publishEvent(
+                new ReturnCopyEvent(this, loan.copyId())
+        );
     }
 
     public Patron addPatron(Patron patron) {

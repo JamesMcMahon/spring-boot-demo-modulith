@@ -77,14 +77,17 @@ graph TD
 ```mermaid
 graph TD
   subgraph LibraryApplication
-    catalog[Catalog<br><sub>Component</sub>]
-    inventory[Inventory<br><sub>Component</sub>]
-    lending[Lending<br><sub>Component</sub>]
-    http[Http<br><sub>Component</sub>]
+    catalog[Catalog<br><sub>Module</sub>]
+    lendingEvents[LendingEvents<br><sub>Module</sub>]
+    inventory[Inventory<br><sub>Module</sub>]
+    lending[Lending<br><sub>Module</sub>]
+    http[Http<br><sub>Module</sub>]
   end
 
 %% Relationships
   inventory -->|uses| catalog
+  inventory -->|listens to| lendingEvents
+  lending -->|depends on| lendingEvents
   lending -->|uses| inventory
   http -->|depends on| catalog
   http -->|depends on| inventory

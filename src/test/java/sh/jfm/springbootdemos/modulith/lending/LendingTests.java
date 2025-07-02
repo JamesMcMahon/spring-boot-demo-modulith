@@ -2,17 +2,22 @@ package sh.jfm.springbootdemos.modulith.lending;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import sh.jfm.springbootdemos.modulith.catalog.Book;
 import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 import sh.jfm.springbootdemos.modulith.inventory.Copy;
 import sh.jfm.springbootdemos.modulith.inventory.Inventory;
 import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
+import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.verify;
 
 @DataJdbcTest
 @Import({Catalog.class, Inventory.class})
@@ -26,13 +31,15 @@ class LendingTests {
     private Catalog catalog;
     @Autowired
     private Inventory inventory;
+    @MockitoBean
+    private ApplicationEventPublisher testApplicationEventPublisher;
 
     private Lending lending;
     private long patronId;
 
     @BeforeEach
     void setUp() {
-        lending = new Lending(inventory, patronRepo, loanRepo);
+        lending = new Lending(inventory, patronRepo, loanRepo, testApplicationEventPublisher);
         patronId = lending.addPatron(new Patron("Test", "User")).id();
     }
 
@@ -53,13 +60,15 @@ class LendingTests {
     }
 
     @Test
-    void returnDeletesLoanAndReturnsCopy() {
+    void returnDeletesLoanAndSendsAReturnsCopyEvent() {
         var loan = borrowBook("123");
 
         lending.returnBook(patronId, "123");
 
         assertThat(loanRepo.existsById(loan.id())).isFalse();
-        assertThat(inventory.availability("123")).isEqualTo(1);
+        var eventCaptor = ArgumentCaptor.forClass(ReturnCopyEvent.class);
+        verify(testApplicationEventPublisher).publishEvent(eventCaptor.capture());
+        assertThat(eventCaptor.getValue().getCopyId()).isEqualTo(loan.copyId());
     }
 
     @Test
