@@ -2,7 +2,6 @@ package sh.jfm.springbootdemos.modulith.lending;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.ApplicationEventPublisher;
@@ -15,6 +14,7 @@ import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
 
 @DataJdbcTest
@@ -62,9 +62,10 @@ class LendingTests {
         lending.returnBook(patronId, "123");
 
         assertThat(loanRepo.existsById(loan.id())).isFalse();
-        var eventCaptor = ArgumentCaptor.forClass(ReturnCopyEvent.class);
-        verify(testApplicationEventPublisher).publishEvent(eventCaptor.capture());
-        assertThat(eventCaptor.getValue().getCopyId()).isEqualTo(loan.copyId());
+        verify(testApplicationEventPublisher).publishEvent(argThat(event ->
+                event instanceof ReturnCopyEvent &&
+                ((ReturnCopyEvent) event).getCopyId().equals(loan.copyId())
+        ));
     }
 
     @Test
