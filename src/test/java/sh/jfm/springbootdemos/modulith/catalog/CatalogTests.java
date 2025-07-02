@@ -4,9 +4,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import sh.jfm.springbootdemos.modulith.catalogevents.BookAddedEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 
 /// Tests [Catalog] with a real H2 DB (`@DataJdbcTest`) but
 /// without the web layer for faster feedback.
@@ -14,17 +19,20 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CatalogTests {
 
     @Autowired
-    BookRepository repo;
+    private BookRepository repo;
+    @MockitoBean
+    private ApplicationEventPublisher testApplicationEventPublisher;
 
     private Catalog catalog;
 
     @BeforeEach
     void setUp() {
-        catalog = new Catalog(repo);
+        catalog = new Catalog(repo, testApplicationEventPublisher);
     }
 
     @Test
-    void addInsertsNewBook() {
+    void addInsertsNewBookAndPublishesEvent() {
+        assertThat(repo.count()).isZero();
         var book = new Book("9780439706230", "Out From Boneville", "Jeff Smith");
 
         catalog.add(book);
@@ -36,6 +44,10 @@ class CatalogTests {
                 .usingRecursiveComparison()
                 .ignoringFields("id")
                 .isEqualTo(book);
+        verify(testApplicationEventPublisher).publishEvent(argThat(event ->
+                event instanceof BookAddedEvent &&
+                ((BookAddedEvent) event).getIsbn().equals(book.isbn())
+        ));
     }
 
     @Test

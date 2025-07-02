@@ -2,7 +2,6 @@ package sh.jfm.springbootdemos.modulith.inventory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 
 /// Business rules for managing physical copies
 ///
@@ -13,18 +12,24 @@ import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 public class Inventory {
 
     private final CopyRepository copiesRepo;
-    private final Catalog catalog;
+    private final AvailableIsbnRepository isbnsRepo;
 
-    Inventory(CopyRepository copies, Catalog catalog) {
+    Inventory(CopyRepository copies, AvailableIsbnRepository isbns) {
         this.copiesRepo = copies;
-        this.catalog = catalog;
+        this.isbnsRepo = isbns;
+    }
+
+    public void registerIsbn(String isbn) {
+        if (!isbnsRepo.existsByIsbn(isbn)) {
+            isbnsRepo.save(new AvailableIsbn(isbn));
+        }
     }
 
     public Copy add(Copy copy) {
         if (copy.id() != null) {
             throw new IllegalArgumentException("Copy ID must be null when creating a new copy");
         }
-        if (!catalog.existsByIsbn(copy.isbn())) {
+        if (!isbnsRepo.existsByIsbn(copy.isbn())) {
             throw new InvalidCopyException(copy.isbn());
         }
         return copiesRepo.save(copy);

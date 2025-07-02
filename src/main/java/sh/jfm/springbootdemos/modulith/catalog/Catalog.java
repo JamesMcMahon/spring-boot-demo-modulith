@@ -1,7 +1,9 @@
 package sh.jfm.springbootdemos.modulith.catalog;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sh.jfm.springbootdemos.modulith.catalogevents.BookAddedEvent;
 
 import java.util.Optional;
 
@@ -16,9 +18,11 @@ import java.util.Optional;
 public class Catalog {
 
     private final BookRepository bookRepo;
+    private final ApplicationEventPublisher events;
 
-    Catalog(BookRepository bookRepo) {
+    Catalog(BookRepository bookRepo, ApplicationEventPublisher events) {
         this.bookRepo = bookRepo;
+        this.events = events;
     }
 
     public Book add(Book book) {
@@ -28,7 +32,9 @@ public class Catalog {
         if (bookRepo.existsByIsbn(book.isbn())) {
             throw new BookAlreadyExistsException(book.isbn());
         }
-        return bookRepo.save(book);
+        var saved = bookRepo.save(book);
+        events.publishEvent(new BookAddedEvent(this, saved.isbn()));
+        return saved;
     }
 
     public void update(Book book) {

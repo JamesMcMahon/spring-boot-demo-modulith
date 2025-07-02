@@ -6,13 +6,23 @@ CREATE TABLE "books"
     author VARCHAR(255) NOT NULL
 );
 
+-- This is a duplicate table to capture add books events from the catalog domain.
+-- This is pointless if the app were to remain a single database.
+-- With the goal of evolving into multiple databases, this allows use to decouple the Inventory database from
+-- the Catalog database
+CREATE TABLE "available_isbns"
+(
+    id   BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    isbn VARCHAR(20) NOT NULL UNIQUE
+);
+
 CREATE TABLE "copies"
 (
     id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     isbn      VARCHAR(20)  NOT NULL,
     location  VARCHAR(255) NOT NULL,
-    available BOOLEAN      NOT NULL DEFAULT TRUE,
-    CONSTRAINT fk_copies_books FOREIGN KEY (isbn) REFERENCES "books" (isbn) ON DELETE CASCADE
+    available BOOLEAN NOT NULL DEFAULT TRUE,
+    CONSTRAINT fk_copies_available_isbns FOREIGN KEY (isbn) REFERENCES "available_isbns" (isbn) ON DELETE CASCADE
 );
 
 CREATE TABLE "patrons"

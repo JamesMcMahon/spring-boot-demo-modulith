@@ -8,8 +8,6 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import sh.jfm.springbootdemos.modulith.catalog.Book;
-import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 import sh.jfm.springbootdemos.modulith.inventory.Copy;
 import sh.jfm.springbootdemos.modulith.inventory.Inventory;
 import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
@@ -20,15 +18,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
 @DataJdbcTest
-@Import({Catalog.class, Inventory.class})
+@Import(Inventory.class)
 class LendingTests {
 
     @Autowired
     private PatronRepository patronRepo;
     @Autowired
     private LoanRepository loanRepo;
-    @Autowired
-    private Catalog catalog;
     @Autowired
     private Inventory inventory;
     @MockitoBean
@@ -107,7 +103,7 @@ class LendingTests {
 
     @SuppressWarnings("SameParameterValue")
     private Loan borrowBook(String isbn) {
-        catalog.add(new Book(isbn, "Title", "Author"));
+        inventory.registerIsbn(isbn);
         inventory.add(new Copy(isbn, "A-1"));
         return lending.borrow(patronId, isbn);
     }

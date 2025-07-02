@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
         displayName = "Catalog",
-        allowedDependencies = {}
+        allowedDependencies = "catalogevents"
 )
 package sh.jfm.springbootdemos.modulith.catalog;

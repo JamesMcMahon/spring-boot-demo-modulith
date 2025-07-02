@@ -5,8 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.modulith.test.ApplicationModuleTest;
 import org.springframework.modulith.test.Scenario;
-import sh.jfm.springbootdemos.modulith.catalog.Book;
-import sh.jfm.springbootdemos.modulith.catalog.Catalog;
 import sh.jfm.springbootdemos.modulith.inventory.Copy;
 import sh.jfm.springbootdemos.modulith.inventory.Inventory;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
@@ -21,8 +19,6 @@ import static org.springframework.modulith.test.ApplicationModuleTest.BootstrapM
 @AutoConfigureTestDatabase(replace = ANY)
 public class LendingApplicationModuleTest {
 
-    @Autowired
-    private Catalog catalog;
     @Autowired
     private Inventory inventory;
     @Autowired
@@ -46,7 +42,7 @@ public class LendingApplicationModuleTest {
 
     @SuppressWarnings("SameParameterValue")
     private Loan borrowBook(long patronId, String isbn) {
-        catalog.add(new Book(isbn, "Title", "Author"));
+        inventory.registerIsbn(isbn);
         inventory.add(new Copy(isbn, "A-1"));
         return lending.borrow(patronId, isbn);
     }
