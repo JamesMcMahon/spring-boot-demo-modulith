@@ -39,6 +39,5 @@ CREATE TABLE "loans"
     isbn      VARCHAR(20) NOT NULL,
     patron_id BIGINT      NOT NULL,
     due_date  DATE        NOT NULL,
-    CONSTRAINT fk_loans_copies FOREIGN KEY (copy_id) REFERENCES "copies" (id) ON DELETE CASCADE,
     CONSTRAINT fk_loans_patrons FOREIGN KEY (patron_id) REFERENCES "patrons" (id) ON DELETE CASCADE
 );

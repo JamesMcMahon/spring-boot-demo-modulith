@@ -3,7 +3,6 @@ package sh.jfm.springbootdemos.modulith.lending;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sh.jfm.springbootdemos.modulith.inventory.Inventory;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import java.time.LocalDate;
@@ -17,13 +16,13 @@ import java.util.List;
 @Transactional
 public class Lending {
 
-    private final Inventory inventory;
+    private final InventoryClient inventory;
     private final PatronRepository patronsRepo;
     private final LoanRepository loansRepo;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     Lending(
-            Inventory inventory,
+            InventoryClient inventory,
             PatronRepository patronsRepo,
             LoanRepository loansRepo,
             ApplicationEventPublisher applicationEventPublisher

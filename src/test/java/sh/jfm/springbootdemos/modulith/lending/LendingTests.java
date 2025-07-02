@@ -5,28 +5,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import sh.jfm.springbootdemos.modulith.inventory.Copy;
-import sh.jfm.springbootdemos.modulith.inventory.Inventory;
 import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @DataJdbcTest
-@Import(Inventory.class)
 class LendingTests {
 
     @Autowired
     private PatronRepository patronRepo;
     @Autowired
     private LoanRepository loanRepo;
-    @Autowired
-    private Inventory inventory;
+    @MockitoBean
+    private InventoryClient inventoryClient;
     @MockitoBean
     private ApplicationEventPublisher testApplicationEventPublisher;
 
@@ -35,21 +34,33 @@ class LendingTests {
 
     @BeforeEach
     void setUp() {
-        lending = new Lending(inventory, patronRepo, loanRepo, testApplicationEventPublisher);
+        lending = new Lending(
+                inventoryClient,
+                patronRepo,
+                loanRepo,
+                testApplicationEventPublisher
+        );
         patronId = lending.addPatron(new Patron("Test", "User")).id();
+
+        when(inventoryClient.markNextCopyAsUnavailable(any()))
+                .thenAnswer(invocation -> {
+                    String isbn = invocation.getArgument(0);
+                    return new Copy(1L, isbn, "Test Method", false);
+                });
     }
 
     @Test
     void borrowCreatesLoanAndMarksCopyUnavailable() {
-        var loan = borrowBook("123");
+        var loan = lending.borrow(patronId, "123");
 
         assertThat(loanRepo.findById(loan.id())).isPresent();
-        assertThat(inventory.availability("123")).isZero();
+        verify(inventoryClient).markNextCopyAsUnavailable("123");
     }
 
     @Test
     void borrowThrowsWhenNoCopiesFree() {
-        borrowBook("123");
+        when(inventoryClient.markNextCopyAsUnavailable("123"))
+                .thenThrow(new NoAvailableCopiesException("123"));
 
         assertThatThrownBy(() -> lending.borrow(patronId, "123"))
                 .isInstanceOf(NoAvailableCopiesException.class);
@@ -57,7 +68,7 @@ class LendingTests {
 
     @Test
     void returnDeletesLoanAndSendsAReturnsCopyEvent() {
-        var loan = borrowBook("123");
+        var loan = lending.borrow(patronId, "123");
 
         lending.returnBook(patronId, "123");
 
@@ -70,7 +81,7 @@ class LendingTests {
 
     @Test
     void findLoansReturnsOnlyLoansForPatron() {
-        var loanForPatron = borrowBook("123");
+        var loanForPatron = lending.borrow(patronId, "123");
 
         assertThat(lending.findLoansForPatron(patronId))
                 .containsExactly(loanForPatron);
@@ -78,7 +89,7 @@ class LendingTests {
 
     @Test
     void findLoansReturnsEmptyAfterReturn() {
-        borrowBook("123");
+        lending.borrow(patronId, "123");
         lending.returnBook(patronId, "123");
 
         assertThat(lending.findLoansForPatron(patronId)).isEmpty();
@@ -100,12 +111,5 @@ class LendingTests {
     void addPatronFailsWhenIdPresent() {
         assertThatThrownBy(() -> lending.addPatron(new Patron(666L, "Test", "User")))
                 .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private Loan borrowBook(String isbn) {
-        inventory.registerIsbn(isbn);
-        inventory.add(new Copy(isbn, "A-1"));
-        return lending.borrow(patronId, isbn);
     }
 }
