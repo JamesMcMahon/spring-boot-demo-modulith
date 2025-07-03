@@ -5,15 +5,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
 public class InventoryExceptionAdvice {
-
-    @ExceptionHandler(CopyNotFoundException.class)
-    ResponseEntity<Void> handleCopyMissing() {
-        return ResponseEntity.status(NOT_FOUND).build();
-    }
 
     @ExceptionHandler(InvalidCopyException.class)
     ResponseEntity<Void> handleInvalidCopy() {

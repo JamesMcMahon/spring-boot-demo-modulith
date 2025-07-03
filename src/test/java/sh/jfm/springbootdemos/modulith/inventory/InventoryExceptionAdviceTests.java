@@ -23,22 +23,12 @@ class InventoryExceptionAdviceTests {
     }
 
     @Test
-    void copyNotFoundMapsTo404() throws Exception {
-        mvc.perform(get("/copy-missing")).andExpect(status().isNotFound());
-    }
-
-    @Test
     void invalidCopyMapsTo400() throws Exception {
         mvc.perform(get("/invalid-copy")).andExpect(status().isBadRequest());
     }
 
     @RestController
     static class FailingController {
-        @GetMapping("/copy-missing")
-        void throwCopyMissing() {
-            throw new CopyNotFoundException(1L);
-        }
-
         @GetMapping("/invalid-copy")
         void throwInvalidCopy() {
             throw new InvalidCopyException("123");
