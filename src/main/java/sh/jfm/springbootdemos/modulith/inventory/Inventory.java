@@ -43,9 +43,9 @@ public class Inventory {
     }
 
     public void markAsAvailable(long copyId) {
-        var existing = copiesRepo.findById(copyId)
+        copiesRepo.findById(copyId)
+                .map(existing -> updateCopyAvailability(existing, true))
                 .orElseThrow(() -> new CopyNotFoundException(copyId));
-        updateCopyAvailability(existing, true);
     }
 
     public Optional<Copy> markNextCopyAsUnavailable(String isbn) {
