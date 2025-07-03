@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import sh.jfm.springbootdemos.modulith.http.RestExceptionAdvice;
 
 import java.util.Optional;
 
@@ -15,7 +14,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /// Web-layer slice test focused on the successful, happy-path contract.
-/// Error scenarios are covered in [CatalogControllerErrorTests] and [RestExceptionAdvice].
+/// Error scenarios are covered in [CatalogControllerErrorTests] and [CatalogRestExceptionAdvice].
 @WebMvcTest(CatalogController.class)
 class CatalogControllerContractTests {
 

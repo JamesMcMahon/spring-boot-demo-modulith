@@ -83,20 +83,15 @@ graph TD
     catalog[Catalog<br><sub>Module</sub>]
     inventory[Inventory<br><sub>Module</sub>]
     lending[Lending<br><sub>Module</sub>]
-    http[Http<br><sub>Module</sub>]
   end
 
-%% HTTP depends on all 3 core modules
-  http -->|depends on| catalog
-  http -->|depends on| inventory
-  http -->|depends on| lending
 %% Catalog emits events
   catalog -->|depends on| catalogEvents
 %% Inventory listens to events and depends on APIs
   inventory -->|listens to| catalogEvents
   inventory -->|listens to| lendingEvents
   inventory -->|depends on| inventoryApi
-%% Lending depends on events and uses Inventory API
+%% Lending depends on events and uses Inventory API 
   lending -->|depends on| lendingEvents
   lending -->|uses| inventoryApi
 ```
