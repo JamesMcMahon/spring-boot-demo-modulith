@@ -11,7 +11,7 @@ import java.util.Optional;
 /// a single JDBC transaction.
 @Service
 @Transactional
-public class Inventory {
+class Inventory {
 
     private final CopyRepository copiesRepo;
     private final AvailableIsbnRepository isbnsRepo;

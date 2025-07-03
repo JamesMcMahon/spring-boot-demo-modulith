@@ -4,8 +4,8 @@ package sh.jfm.springbootdemos.modulith.catalog;
 ///
 /// Propagates to REST where [CatalogRestExceptionAdvice]
 /// maps it to an HTTP status.
-public class BookAlreadyExistsException extends RuntimeException {
-    public BookAlreadyExistsException(String isbn) {
+class BookAlreadyExistsException extends RuntimeException {
+    BookAlreadyExistsException(String isbn) {
         super("Book %s already exists".formatted(isbn));
     }
 }

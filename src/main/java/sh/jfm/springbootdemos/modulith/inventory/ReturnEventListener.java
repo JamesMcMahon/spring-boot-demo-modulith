@@ -8,11 +8,11 @@ import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 /// This listener responds to ReturnCopyEvent events and updates the inventory
 /// to mark returned copies as available.
 @Component
-public class ReturnEventListener {
+class ReturnEventListener {
 
     private final Inventory inventory;
 
-    public ReturnEventListener(Inventory inventory) {
+    ReturnEventListener(Inventory inventory) {
         this.inventory = inventory;
     }
 

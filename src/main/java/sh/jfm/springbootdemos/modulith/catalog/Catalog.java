@@ -15,7 +15,7 @@ import java.util.Optional;
 /// a single JDBC transaction.
 @Service
 @Transactional
-public class Catalog {
+class Catalog {
 
     private final BookRepository bookRepo;
     private final ApplicationEventPublisher events;

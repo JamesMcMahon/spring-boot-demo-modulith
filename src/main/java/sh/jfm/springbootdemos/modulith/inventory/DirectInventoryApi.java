@@ -8,11 +8,11 @@ import java.util.Optional;
 /// Simple direct call implementation of public api.
 /// Component is injected at run time to avoid direct dependencies.
 @Component
-public class DirectInventoryApi implements InventoryApi {
+class DirectInventoryApi implements InventoryApi {
 
     private final Inventory inventory;
 
-    public DirectInventoryApi(Inventory inventory) {
+    DirectInventoryApi(Inventory inventory) {
         this.inventory = inventory;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 /// a single JDBC transaction.
 @Service
 @Transactional
-public class Lending {
+class Lending {
 
     private final InventoryApi inventory;
     private final PatronRepository patronsRepo;

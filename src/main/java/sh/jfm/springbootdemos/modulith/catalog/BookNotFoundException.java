@@ -4,8 +4,8 @@ package sh.jfm.springbootdemos.modulith.catalog;
 ///
 /// Propagates to REST where [CatalogRestExceptionAdvice]
 /// maps it to an HTTP status.
-public class BookNotFoundException extends RuntimeException {
-    public BookNotFoundException(String isbn) {
+class BookNotFoundException extends RuntimeException {
+    BookNotFoundException(String isbn) {
         super("Book %s not found".formatted(isbn));
     }
 }

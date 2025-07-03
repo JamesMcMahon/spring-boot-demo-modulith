@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @ControllerAdvice
-public class InventoryExceptionAdvice {
+class InventoryExceptionAdvice {
 
     @ExceptionHandler(InvalidCopyException.class)
     ResponseEntity<Void> handleInvalidCopy() {

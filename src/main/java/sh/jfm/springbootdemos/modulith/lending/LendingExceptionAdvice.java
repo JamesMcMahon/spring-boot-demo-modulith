@@ -8,7 +8,7 @@ import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
-public class LendingExceptionAdvice {
+class LendingExceptionAdvice {
 
     @ExceptionHandler(PatronNotFoundException.class)
     ResponseEntity<Void> handlePatronMissing() {
