@@ -101,6 +101,20 @@ graph TD
   lending -->|uses| inventoryApi
 ```
 
+### Interactions Between Modules
+
+The modules communicate exclusively through Spring application events and an explicit public API interface.
+
+| Initiator Module | Mechanism         | Consumer&nbsp;Module | Responsibility                                                                 |
+|------------------|-------------------|----------------------|--------------------------------------------------------------------------------|
+| Catalog          | `BookAddedEvent`  | Inventory            | Registers the new ISBN so copies can be managed.                               |
+| Lending          | `ReturnCopyEvent` | Inventory            | Marks the returned copy as available again.                                    |
+| Lending          | `InventoryApi`    | Inventory            | Marks the next available copy as **unavailable** when a patron borrows a book. |
+
+These interactions keep the modules decoupled: Catalog and Lending publish events
+without knowing the listeners, while Lending relies only on the narrow `InventoryApi`
+instead of the entire Inventory module.
+
 ## Using the Application
 
 ### Starting
