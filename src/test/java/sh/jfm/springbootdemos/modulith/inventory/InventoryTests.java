@@ -105,6 +105,12 @@ class InventoryTests {
     }
 
     @Test
+    void markAsAvailableThrowsWhenCopyMissing() {
+        assertThatThrownBy(() -> inventory.markAsAvailable(999L))
+                .isInstanceOf(CopyNotFoundException.class);
+    }
+
+    @Test
     void registerIsbnPersistsValue() {
         inventory.registerIsbn("111-1-11-111111-1");
         assertThat(isbnsRepo.existsByIsbn("111-1-11-111111-1")).isTrue();
