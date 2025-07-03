@@ -2,7 +2,8 @@ package sh.jfm.springbootdemos.modulith.inventory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
+
+import java.util.Optional;
 
 /// Business rules for managing physical copies
 ///
@@ -47,10 +48,10 @@ public class Inventory {
         updateCopyAvailability(existing, true);
     }
 
-    public Copy markNextCopyAsUnavailable(String isbn) {
-        var existing = copiesRepo.findFirstByIsbnAndAvailableTrue(isbn)
-                .orElseThrow(() -> new NoAvailableCopiesException(isbn));
-        return updateCopyAvailability(existing, false);
+    public Optional<Copy> markNextCopyAsUnavailable(String isbn) {
+        return copiesRepo
+                .findFirstByIsbnAndAvailableTrue(isbn)
+                .map(existing -> updateCopyAvailability(existing, false));
     }
 
     private Copy updateCopyAvailability(Copy existing, boolean available) {

@@ -7,8 +7,9 @@ import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import sh.jfm.springbootdemos.modulith.inventoryapi.InventoryApi;
-import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
+
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -42,7 +43,7 @@ class LendingTests {
         );
         patronId = lending.addPatron(new Patron("Test", "User")).id();
 
-        when(inventoryApi.markNextCopyAsUnavailable(any())).thenReturn(1L);
+        when(inventoryApi.markNextCopyAsUnavailable(any())).thenReturn(Optional.of(1L));
     }
 
     @Test
@@ -54,9 +55,9 @@ class LendingTests {
     }
 
     @Test
-    void borrowThrowsWhenNoCopiesFree() {
+    void borrowThrowsWhenInventoryReturnsEmpty() {
         when(inventoryApi.markNextCopyAsUnavailable("123"))
-                .thenThrow(new NoAvailableCopiesException("123"));
+                .thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> lending.borrow(patronId, "123"))
                 .isInstanceOf(NoAvailableCopiesException.class);

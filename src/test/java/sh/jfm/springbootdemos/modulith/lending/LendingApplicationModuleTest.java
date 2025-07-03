@@ -9,6 +9,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import sh.jfm.springbootdemos.modulith.inventoryapi.InventoryApi;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace.ANY;
@@ -30,7 +32,8 @@ public class LendingApplicationModuleTest {
     /// @param scenario Spring Modulith test scenario for event verification
     @Test
     void returningABookPublishesAnEvent(Scenario scenario) {
-        when(mockInventoryApi.markNextCopyAsUnavailable("123")).thenReturn(777L);
+        when(mockInventoryApi.markNextCopyAsUnavailable("123"))
+                .thenReturn(Optional.of(777L));
         var patron = lending.addPatron(new Patron("Test", "User"));
         var loan = lending.borrow(patron.id(), "123");
 

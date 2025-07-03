@@ -7,8 +7,8 @@ import sh.jfm.springbootdemos.modulith.catalog.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.CopyNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.InvalidCopyException;
-import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.LoanNotFoundException;
+import sh.jfm.springbootdemos.modulith.lending.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.PatronNotFoundException;
 
 import static org.springframework.http.HttpStatus.*;

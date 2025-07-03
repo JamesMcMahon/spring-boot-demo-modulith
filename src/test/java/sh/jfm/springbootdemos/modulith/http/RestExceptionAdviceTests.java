@@ -10,8 +10,8 @@ import sh.jfm.springbootdemos.modulith.catalog.BookAlreadyExistsException;
 import sh.jfm.springbootdemos.modulith.catalog.BookNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.CopyNotFoundException;
 import sh.jfm.springbootdemos.modulith.inventory.InvalidCopyException;
-import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.LoanNotFoundException;
+import sh.jfm.springbootdemos.modulith.lending.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lending.PatronNotFoundException;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,12 +51,6 @@ class RestExceptionAdviceTests {
     }
 
     @Test
-    void noCopiesFreeMapsTo409() throws Exception {
-        mvc.perform(get("/no-copies"))
-                .andExpect(status().isConflict());
-    }
-
-    @Test
     void invalidCopyMapsTo400() throws Exception {
         mvc.perform(get("/invalid-copy"))
                 .andExpect(status().isBadRequest());
@@ -71,6 +65,12 @@ class RestExceptionAdviceTests {
     @Test
     void loanNotFoundMapsTo409() throws Exception {
         mvc.perform(get("/loan-missing"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void noCopyAvailableMapsTo409() throws Exception {
+        mvc.perform(get("/no-copy"))
                 .andExpect(status().isConflict());
     }
 
@@ -92,11 +92,6 @@ class RestExceptionAdviceTests {
             throw new CopyNotFoundException(42L);
         }
 
-        @GetMapping("/no-copies")
-        void throwNoCopies() {
-            throw new NoAvailableCopiesException("123");
-        }
-
         @GetMapping("/invalid-copy")
         void throwInvalidCopy() {
             throw new InvalidCopyException("123");
@@ -110,6 +105,11 @@ class RestExceptionAdviceTests {
         @GetMapping("/loan-missing")
         void throwLoanMissing() {
             throw new LoanNotFoundException(1L, "123");
+        }
+
+        @GetMapping("/no-copy")
+        void throwNoCopiesForLending() {
+            throw new NoAvailableCopiesException("123");
         }
     }
 }

@@ -1,4 +1,4 @@
-package sh.jfm.springbootdemos.modulith.inventoryapi;
+package sh.jfm.springbootdemos.modulith.lending;
 
 public class NoAvailableCopiesException extends RuntimeException {
     public NoAvailableCopiesException(String isbn) {

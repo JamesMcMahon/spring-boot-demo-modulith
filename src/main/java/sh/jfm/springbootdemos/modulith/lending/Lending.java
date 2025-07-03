@@ -39,7 +39,8 @@ public class Lending {
             throw new PatronNotFoundException(patronId);
         }
 
-        var lentCopyId = inventory.markNextCopyAsUnavailable(isbn);
+        var lentCopyId = inventory.markNextCopyAsUnavailable(isbn)
+                .orElseThrow(() -> new NoAvailableCopiesException(isbn));
         return loansRepo.save(new Loan(
                 lentCopyId,
                 isbn,
