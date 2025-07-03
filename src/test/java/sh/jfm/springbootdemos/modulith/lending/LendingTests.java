@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import sh.jfm.springbootdemos.modulith.inventory.Copy;
-import sh.jfm.springbootdemos.modulith.inventory.NoAvailableCopiesException;
+import sh.jfm.springbootdemos.modulith.inventoryapi.InventoryApi;
+import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,7 +25,7 @@ class LendingTests {
     @Autowired
     private LoanRepository loanRepo;
     @MockitoBean
-    private InventoryClient inventoryClient;
+    private InventoryApi inventoryApi;
     @MockitoBean
     private ApplicationEventPublisher testApplicationEventPublisher;
 
@@ -35,18 +35,14 @@ class LendingTests {
     @BeforeEach
     void setUp() {
         lending = new Lending(
-                inventoryClient,
+                inventoryApi,
                 patronRepo,
                 loanRepo,
                 testApplicationEventPublisher
         );
         patronId = lending.addPatron(new Patron("Test", "User")).id();
 
-        when(inventoryClient.markNextCopyAsUnavailable(any()))
-                .thenAnswer(invocation -> {
-                    String isbn = invocation.getArgument(0);
-                    return new Copy(1L, isbn, "Test Method", false);
-                });
+        when(inventoryApi.markNextCopyAsUnavailable(any())).thenReturn(1L);
     }
 
     @Test
@@ -54,12 +50,12 @@ class LendingTests {
         var loan = lending.borrow(patronId, "123");
 
         assertThat(loanRepo.findById(loan.id())).isPresent();
-        verify(inventoryClient).markNextCopyAsUnavailable("123");
+        verify(inventoryApi).markNextCopyAsUnavailable("123");
     }
 
     @Test
     void borrowThrowsWhenNoCopiesFree() {
-        when(inventoryClient.markNextCopyAsUnavailable("123"))
+        when(inventoryApi.markNextCopyAsUnavailable("123"))
                 .thenThrow(new NoAvailableCopiesException("123"));
 
         assertThatThrownBy(() -> lending.borrow(patronId, "123"))

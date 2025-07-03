@@ -14,7 +14,7 @@ import static org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTest
 import static org.springframework.modulith.test.ApplicationModuleTest.BootstrapMode.ALL_DEPENDENCIES;
 
 /// Tests the interactions between the Lending module and other modules.
-@ApplicationModuleTest(mode = ALL_DEPENDENCIES)
+@ApplicationModuleTest(mode = ALL_DEPENDENCIES, extraIncludes = "inventory")
 // need to replace the database otherwise we have issues reapplying the schema
 @AutoConfigureTestDatabase(replace = ANY)
 public class LendingApplicationModuleTest {

@@ -3,6 +3,7 @@ package sh.jfm.springbootdemos.modulith.lending;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sh.jfm.springbootdemos.modulith.inventoryapi.InventoryApi;
 import sh.jfm.springbootdemos.modulith.lendingevents.ReturnCopyEvent;
 
 import java.time.LocalDate;
@@ -16,13 +17,13 @@ import java.util.List;
 @Transactional
 public class Lending {
 
-    private final InventoryClient inventory;
+    private final InventoryApi inventory;
     private final PatronRepository patronsRepo;
     private final LoanRepository loansRepo;
     private final ApplicationEventPublisher applicationEventPublisher;
 
     Lending(
-            InventoryClient inventory,
+            InventoryApi inventory,
             PatronRepository patronsRepo,
             LoanRepository loansRepo,
             ApplicationEventPublisher applicationEventPublisher
@@ -38,9 +39,9 @@ public class Lending {
             throw new PatronNotFoundException(patronId);
         }
 
-        var lentCopy = inventory.markNextCopyAsUnavailable(isbn);
+        var lentCopyId = inventory.markNextCopyAsUnavailable(isbn);
         return loansRepo.save(new Loan(
-                lentCopy.id(),
+                lentCopyId,
                 isbn,
                 patronId,
                 LocalDate.now().plusDays(30)

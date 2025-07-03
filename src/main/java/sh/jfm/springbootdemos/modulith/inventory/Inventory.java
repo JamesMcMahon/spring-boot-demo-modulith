@@ -2,6 +2,7 @@ package sh.jfm.springbootdemos.modulith.inventory;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import sh.jfm.springbootdemos.modulith.inventoryapi.NoAvailableCopiesException;
 
 /// Business rules for managing physical copies
 ///

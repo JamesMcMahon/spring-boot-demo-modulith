@@ -77,23 +77,28 @@ graph TD
 ```mermaid
 graph TD
   subgraph LibraryApplication
-    CatalogEvents["CatalogEvents<br><sub>Module</sub>"]
-    LendingEvents["LendingEvents<br><sub>Module</sub>"]
-    Catalog["Catalog<br><sub>Module</sub>"]
-    Inventory["Inventory<br><sub>Module</sub>"]
-    Lending["Lending<br><sub>Module</sub>"]
-    Http["Http<br><sub>Module</sub>"]
+    catalogEvents[CatalogEvents<br><sub>Module</sub>]
+    lendingEvents[LendingEvents<br><sub>Module</sub>]
+    inventoryApi[InventoryApi<br><sub>Module</sub>]
+    catalog[Catalog<br><sub>Module</sub>]
+    inventory[Inventory<br><sub>Module</sub>]
+    lending[Lending<br><sub>Module</sub>]
+    http[Http<br><sub>Module</sub>]
   end
 
-%% Relationships
-  Http -->|depends on| Catalog
-  Http -->|depends on| Inventory
-  Http -->|depends on| Lending
-  Inventory -->|listens to| CatalogEvents
-  Inventory -->|listens to| LendingEvents
-  Lending -->|depends on| LendingEvents
-  Lending -->|uses| Inventory
-  Catalog -->|depends on| CatalogEvents
+%% HTTP depends on all 3 core modules
+  http -->|depends on| catalog
+  http -->|depends on| inventory
+  http -->|depends on| lending
+%% Catalog emits events
+  catalog -->|depends on| catalogEvents
+%% Inventory listens to events and depends on APIs
+  inventory -->|listens to| catalogEvents
+  inventory -->|listens to| lendingEvents
+  inventory -->|depends on| inventoryApi
+%% Lending depends on events and uses Inventory API
+  lending -->|depends on| lendingEvents
+  lending -->|uses| inventoryApi
 ```
 
 ## Using the Application

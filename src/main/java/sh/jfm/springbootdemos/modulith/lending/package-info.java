@@ -1,5 +1,5 @@
 @org.springframework.modulith.ApplicationModule(
         displayName = "Lending",
-        allowedDependencies = {"inventory", "lendingevents"}
+        allowedDependencies = {"inventoryapi", "lendingevents"}
 )
 package sh.jfm.springbootdemos.modulith.lending;
