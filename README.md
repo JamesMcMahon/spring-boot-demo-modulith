@@ -76,7 +76,7 @@ graph TD
   LendingDomain -- " Update Copy Availability " --> InventoryDomain
 ```
 
-### Components
+### Modules
 
 ```mermaid
 graph TD
