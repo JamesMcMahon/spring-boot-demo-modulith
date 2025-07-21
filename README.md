@@ -44,6 +44,9 @@ write-up.
   lightweight approach to enforcing
   component boundaries. The boundaries are not enforced at compile time, but running by running the test suite, we can
   ensure that the application doesn't drift from our defined components or their explicitly defined dependencies.
+- [`v4-decoupled-modules`](https://github.com/JamesMcMahon/spring-boot-demo-modulith/tree/v4-decoupled-modules) -
+  Simplify and decouple modules. The modules no longer directly depend on each other, and interactions are cleaning
+  encapsulated into explicit event and public API modules.
 
 ### 🗺️ Domain
 
