@@ -1,6 +1,6 @@
 # Spring Modulith Demo
 
-This project is a minimal, self-contained example of using Spring Modulith to evolve a classic monolithic
+This project is a minimal, self-contained example of using Spring Modulith to evolve a monolithic
 application into a modular monolith; a design that can later be split into microservices.
 
 *This README is evolving alongside the code, so if you are looking at an older commit, you may not see the complete
@@ -38,8 +38,7 @@ write-up.
   complexity and scaling needs.
 - `v3-spring-modules` - Using Spring Modulith's `@ApplicationModule`, we have taken a lightweight approach to enforcing
   component boundaries. The boundaries are not enforced at compile time, but running by running the test suite, we can
-  ensure
-  that the application doesn't drift from our defined components or their explicitly defined dependencies.
+  ensure that the application doesn't drift from our defined components or their explicitly defined dependencies.
 
 ### 🗺️ Domain
 
@@ -128,7 +127,7 @@ The service starts at <http://localhost:8080>.
 
 #### API documentation
 
-Once the application is running you can explore the REST endpoints via Swagger / OpenAPI:
+Once the application is running, you can explore the REST endpoints via Swagger / OpenAPI:
 
 * Swagger UI – <http://localhost:8080/swagger-ui.html>
 * Raw OpenAPI spec – <http://localhost:8080/v3/api-docs>
