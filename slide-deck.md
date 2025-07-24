@@ -356,7 +356,7 @@ If we decided to move to a full microservice architecture:
 - Implement an external event bus (e.g., RabbitMQ or Kafka)
 - Split into Gradle/Maven modules (feasible now that we've identified clear boundaries)
 - Use HTTP for atomic borrow operation
-    - Can use HttpExchangeBuilder to implement API automatically
+  - Can use Spring's `@HttpExchange` to implement HTTP Client automatically
 - Separate into multiple independently deployable applications
 - Divide into multiple databases (easier with separate Spring applications)
 
