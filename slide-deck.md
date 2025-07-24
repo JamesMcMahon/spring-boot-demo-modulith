@@ -299,6 +299,19 @@ src="https://kroki.io/mermaid/svg/eNqNT0EKwyAQvPuKxUNuoR8IQptLCzn2Jj2YxCaCVVHTkt
 
 ---
 
+# Aside: Application Events
+
+Spring can use events entirely locally, avoiding the need for external brokers.
+
+- `ApplicationEventPublisher` - used to send events
+- ` @EventListener` - makes a component listen to events
+- `ApplicationEvent` - optional class to extend for an event
+
+See:
+https://github.com/JamesMcMahon/ApplicationEventDemo
+
+---
+
 # Lending - Returns
 
 - System sends an event when a book is returned
