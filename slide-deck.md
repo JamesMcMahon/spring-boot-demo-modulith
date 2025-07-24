@@ -314,12 +314,11 @@ src="https://kroki.io/mermaid/svg/eNqNT0EKwyAQvPuKxUNuoR8IQptLCzn2Jj2YxCaCVVHTkt
 - We can maintain decoupling while preserving atomicity:
 
 ```java 
+// By introducing this interface, any implementation on the classpath will be automatically wired at runtime.
 public interface InventoryApi {
     Optional<Long> markNextCopyAsUnavailable(String isbn);
 }
 ```
-
-By introducing this interface, any implementation on the classpath will be automatically wired at runtime.
 
 ---
 
