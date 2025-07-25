@@ -3,6 +3,8 @@
 This project is a minimal, self-contained example of using Spring Modulith to evolve a monolithic
 application into a modular monolith; a design that can later be split into microservices.
 
+Slides for the talk accompanying this demo can be found at https://jfm.sh/spring-boot-demo-modulith/.
+
 *This README is evolving alongside the code, so if you are looking at an older commit, you may not see the complete
 version.
 If you want to see the latest version of this README look at the HEAD commit on `main`*
