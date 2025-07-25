@@ -1,0 +1,28 @@
+name: Slides to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'slides-deck.md'
+      - '.github/workflows/**'
+
+jobs:
+  publish:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Convert Markdown into HTML
+        uses: KoharaKazuya/marp-cli-action@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
