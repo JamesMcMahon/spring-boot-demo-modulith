@@ -350,6 +350,8 @@ src="https://kroki.io/mermaid/svg/eNqNkU0KgzAQhfc5xWy6lF5ABGm7ECx00Z10EWuwgTSRJB
 
 ---
 
+<style scoped>section{font-size:32px;}</style>
+
 # Next Steps
 
 If we decided to move to a full microservice architecture:
