@@ -5,8 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'slides-deck.md'
-      - '.marprc.yaml'
+      - 'slide-deck.md'
       - '.github/workflows/**'
 
 jobs:
