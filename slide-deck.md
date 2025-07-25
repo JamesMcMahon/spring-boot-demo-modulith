@@ -49,6 +49,7 @@ https://github.com/JamesMcMahon/spring-boot-demo-modulith/
 - A lot of complexity
 - Deployment can be difficult
 - Difficult to change
+- If you had wrong assumptions about your domain, they are now encoded in the design of the services
 
 ---
 
