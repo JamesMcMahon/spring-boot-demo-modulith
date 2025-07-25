@@ -21,9 +21,11 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Convert Markdown into HTML
-        uses: KoharaKazuya/marp-cli-action@v4
+        uses: docker://marpteam/marp-cli:v4.2.1
         with:
-          generate-pdf: false
+          args: slide-deck.md -o _site/index.html --html
+        env:
+          MARP_USER: root:root
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

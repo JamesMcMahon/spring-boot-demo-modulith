@@ -1,4 +1,0 @@
-# Marp configuration - see https://github.com/marp-team/marp-cli/blob/main/README.md#configuration-file
-
-html: true
-output: _site
