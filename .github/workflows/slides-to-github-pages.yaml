@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'slides-deck.md'
+      - '.marprc.yaml'
       - '.github/workflows/**'
 
 jobs:
@@ -19,6 +20,8 @@ jobs:
 
       - name: Convert Markdown into HTML
         uses: KoharaKazuya/marp-cli-action@v4
+        with:
+          generate-pdf: false
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
