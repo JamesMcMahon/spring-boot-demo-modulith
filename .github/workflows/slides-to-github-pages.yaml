@@ -23,9 +23,12 @@ jobs:
       - name: Convert Markdown into HTML
         uses: docker://marpteam/marp-cli:v4.2.1
         with:
-          args: slide-deck.md -o _site/index.html --html
+          args: slide-deck.md -o _site/index.html --allow-local-files --html
         env:
           MARP_USER: root:root
+
+      - name: Copy Slide Assets
+        run: cp -r slide-assets/ _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

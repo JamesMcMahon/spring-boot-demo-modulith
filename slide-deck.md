@@ -12,7 +12,7 @@ style: |
   }
 ---
 
-[//]: # (run using `marp slide-deck.md -o slides.html --html -w`)
+[//]: # (run using `marp slide-deck.md -o slides.html --html --allow-local-files -w`)
 
 # Evolve Your Codebase Using Spring Modulith
 
@@ -59,7 +59,7 @@ https://github.com/JamesMcMahon/spring-boot-demo-modulith/
 - Encapsulate domains to make working with multiple teams easier
 - Easier to change
 
-![w:619 h:320 Modular Monolith Diagram](https://www.milanjovanovic.tech/blogs/mnw_049/modular_monolith_diagram.png)
+![w:619 h:320 Modular Monolith Diagram](slide-assets/modular_monolith_diagram.png)
 
 ---
 
@@ -124,7 +124,7 @@ https://github.com/JamesMcMahon/spring-boot-demo-modulith/
 <marp-auto-scaling data-downscale-only>
 <img 
 alt="Domain Graph" 
-src="https://kroki.io/mermaid/svg/eNqNkE1qwzAQhfc-xWAIJAvTC5SA43ZR8KIEkk3oYhwLR8SVjCw78QV6gB6xJ-lImgSUJtCNfmZG39N7jcHuAOU6mc1AnK0wClvAvdUmAdj0wsxTt6YLN1CgxVY3UOtPlIoG-qFqPIA7L76xS_maftAMwErrY79L_eZLQtWJ472pUSiSmu4Qr70L81pgaqE7KQgb9ohb0kGqe__kzoXJVyaWGhUB_cald7RGuyIfIpmBgoGfr2_WAakoP8pO0iDMuTgKU_ULDhOyDFLI6xqeYNPVaAUdtlKcQkbUy7JlHOafl8Hvc2WWxUHsj5CPKFusZCvtxICb7CLEShujTyS7FnYwKgg7mv9GTr8fRUiCYVFkzjYbe2CcxG7kg-4WW-kNO0F4PcvePvIbKYbXHBZ5n_5j-Bfn3-zk"/>
+src="slide-assets/components.svg"/>
 </marp-auto-scaling>
 </p>
 
@@ -269,7 +269,7 @@ See `ModuleDocumentationTests` for implementation details.
 <marp-auto-scaling data-downscale-only>
 <img 
 alt="Spring Modules Graph" 
-src="https://kroki.io/mermaid/svg/eNqNT0EKwyAQvPuKxUNuoR8IQptLCzn2Jj2YxCaCVVHTkt93Q2oxFEo86Ozszsx61_bVjcJHuJ4IhKkdvHAjNKr1ws9H57TqRFTWcPrL0RuBz0FCaDtwWq-gaj2r0I7V9uGskSZWh6XMJMo8kbZ-5vSS4A6ZlqZXBpOaFeyQjDE6Ts94_x1GP7JZDMoSpiADviz9kGQ7bPpfFUmRS7uXDmcDWJObQJGFFMmOvAEtWoGu"/>
+src="slide-assets/initial-modules.svg"/>
 </marp-auto-scaling>
 </p>
 
@@ -354,7 +354,7 @@ public interface InventoryApi {
 <marp-auto-scaling data-downscale-only>
 <img 
 alt="Spring Modules Graph" 
-src="https://kroki.io/mermaid/svg/eNqNkU0KgzAQhfc5xWy6lF5ABGm7ECx00Z10EWuwgTSRJBYKHr5J8GdUarvLkPfefDNTa9o84HokAKYt61DlvNRUv9OmEfxOLVfS_QK4JxWqPr2YtKY44CoudRI7f3JWVStYvPfvW3AJJisuB1eOqw0Xl16hPAQvMlRseHq-geyf9Cn69wQD-1el-yZkt4O-P7AntwZYGJWMeBBFSVexxqkNKNnN1-r9IxMIbiyTBqzqY4DKCiYzpJfMR4_zhPDJtQzfUs7utFJiYHwbz9vvBXMh2tYwg0ZyxEDGna6ylxRY55Pm3T8U5fdT"/>
+src="slide-assets/decoupled.svg"/>
 </marp-auto-scaling>
 </p>
 
