@@ -28,7 +28,7 @@ jobs:
           MARP_USER: root:root
 
       - name: Copy Slide Assets
-        run: cp -r slide-assets/ _site/
+        run: mkdir -p _site/slide-assets && cp -r slide-assets/ _site/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
