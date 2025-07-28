@@ -292,13 +292,19 @@ src="https://kroki.io/mermaid/svg/eNqNT0EKwyAQvPuKxUNuoR8IQptLCzn2Jj2YxCaCVVHTkt
 
 ---
 
-# Catalog
+# Intermodule Communication
 
-- Instead of direct availability checks against Catalog:
-    - Catalog now sends an event when books are created
-    - Inventory listens for this event and tracks the ISBNs
-- This approach is more complex, duplicates data, and is harder to follow
-- However, it achieves decoupling—a valuable trade-off for maintainability
+- Book Added
+- Copy Borrowed
+- Copy Returned
+
+---
+
+# Lending - Copy Returned
+
+- System sends an event when a book is returned
+- This is an ideal use case for eventual consistency
+- Inventory listens for this event and increases availability atomically
 
 ---
 
@@ -315,15 +321,17 @@ https://github.com/JamesMcMahon/ApplicationEventDemo
 
 ---
 
-# Lending - Returns
+# Catalog - Book Added
 
-- System sends an event when a book is returned
-- This is an ideal use case for eventual consistency
-- Inventory listens for this event and increases availability atomically
+- Instead of direct availability checks against Catalog:
+    - Catalog now sends an event when books are created
+    - Inventory listens for this event and tracks the ISBNs
+- This approach is more complex, duplicates data, and is harder to follow
+- However, it achieves decoupling—a valuable trade-off for maintainability
 
 ---
 
-# Lending - Borrowing
+# Lending - Copy Borrowed
 
 - Challenging scenario because eventual consistency isn't appropriate
 - A direct call is perfect, as we need this to be atomic so other folks don't borrow the same copy
