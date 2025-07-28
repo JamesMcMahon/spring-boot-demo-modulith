@@ -59,6 +59,8 @@ https://github.com/JamesMcMahon/spring-boot-demo-modulith/
 - Encapsulate domains to make working with multiple teams easier
 - Easier to change
 
+![w:619 h:320 Modular Monolith Diagram](https://www.milanjovanovic.tech/blogs/mnw_049/modular_monolith_diagram.png)
+
 ---
 
 ## Common Pattern
