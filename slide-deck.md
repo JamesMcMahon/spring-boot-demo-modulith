@@ -12,6 +12,7 @@ style: |
   }
 ---
 
+[//]: # (© 2025 by James McMahon. All Rights Reserved.)
 [//]: # (run using `marp slide-deck.md -o slides.html --html --allow-local-files -w`)
 
 # Evolve Your Codebase Using Spring Modulith

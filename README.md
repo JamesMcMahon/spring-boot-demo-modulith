@@ -243,3 +243,7 @@ curl -i http://localhost:8080/lending/patrons/1/loans
 ```
 
 • HTTP 200 with a JSON array of the patron’s open loans.
+
+## Licensing
+
+The code in this repo is licensed under the [Unlicense license](license), and the slides are © 2025 by James McMahon.
